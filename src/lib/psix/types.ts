@@ -34,4 +34,5 @@ export interface PsixVesselDocumentRow {
   ExpiredDtTm?: string;
   OrganizationAbbr?: string;
   Number?: string;
+  StatusLookupName?: string;
 }
