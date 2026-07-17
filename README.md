@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# US Inland & Coastal Fleet Dashboard
 
-## Getting Started
+An executive dashboard covering the US inland/coastal tank barge, hopper barge, towboat, and tugboat
+fleet, built on data pulled from the US Coast Guard's PSIX vessel database. See the **Data Sources** tab
+in the app itself for what each number does and doesn't mean.
 
-First, run the development server:
+## Refreshing the data (no coding required)
+
+1. Go to this repository on github.com.
+2. Click the **Actions** tab near the top.
+3. Click **Refresh fleet data** in the list on the left.
+4. Click the **Run workflow** button, then **Run workflow** again to confirm.
+5. Wait — a full refresh takes roughly 30-45 minutes (it pulls tens of thousands of records from a
+   small government server at a deliberately gentle pace, so it isn't instant). You can watch its
+   progress by clicking into the running job.
+6. When it finishes, it automatically commits the new data and Vercel redeploys the site with it —
+   nothing else to do. The "last pulled" timestamp on every tab will reflect the new run.
+
+It also runs automatically every Monday morning, since that's roughly how often the underlying USCG data
+itself changes.
+
+## Getting to the site
+
+The site is password-protected (see below) — ask whoever manages the Vercel project for the current
+password if you don't have it.
+
+## Local development (for whoever maintains this)
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To pull fresh data locally instead of waiting on GitHub Actions:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run refresh-data
+```
 
-## Learn More
+Add `-- --limit 20` to that command to do a fast, small test pull instead of the full ~65,000-vessel run.
 
-To learn more about Next.js, take a look at the following resources:
+## Password protection
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Set an environment variable named `SITE_PASSWORD` in the Vercel project's settings (Settings → Environment
+Variables). Any username works at the login prompt — only the password is checked. Without that
+environment variable set, the site is open to anyone with the URL, so make sure it's set before sharing
+the link outside the team.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploying
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project deploys to [Vercel](https://vercel.com). Connect this GitHub repository to a Vercel project
+(Vercel → Add New → Project → import this repo) and it will build and deploy automatically on every push
+to `main` — including the automated data-refresh commits described above.

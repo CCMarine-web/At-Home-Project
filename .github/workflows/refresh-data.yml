@@ -1,0 +1,41 @@
+name: Refresh fleet data
+
+# Two ways to run this, both usable without touching any code:
+#  1. Automatically, every Monday morning (matches PSIX's own weekly refresh).
+#  2. On demand: go to this repo's "Actions" tab on github.com, click
+#     "Refresh fleet data" on the left, then click the "Run workflow" button.
+on:
+  schedule:
+    - cron: "0 11 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Pull latest fleet data from USCG PSIX
+        run: npm run refresh-data
+
+      - name: Commit updated data if it changed
+        run: |
+          git config user.name "fleet-data-bot"
+          git config user.email "actions@github.com"
+          git add data/fleet-data.json
+          if git diff --cached --quiet; then
+            echo "No changes to fleet data."
+          else
+            git commit -m "Refresh fleet data from USCG PSIX"
+            git push
+          fi
