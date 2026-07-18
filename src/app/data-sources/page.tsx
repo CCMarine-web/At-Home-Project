@@ -31,7 +31,7 @@ function SourceCard({ name, status, children }: SourceCardProps) {
 export default function DataSourcesPage() {
   const data = getFleetData();
   const wcsc = getWcscFleet();
-  const wcscPopulated = wcsc?.counts.dryCargoBarge != null;
+  const wcscPopulated = (wcsc?.counts.hopperBarge ?? wcsc?.counts.dryCargoBarge) != null;
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
@@ -70,6 +70,35 @@ export default function DataSourcesPage() {
           <p>{data?.methodology.tankBarges ?? "Methodology details are populated after the first data pull."}</p>
         </SourceCard>
 
+        <SourceCard name="Towing vessels — Subchapter M in-service filter" status="used">
+          <p>
+            {data?.methodology.towingInService ??
+              "Towing vessels are inspected under 46 CFR Subchapter M (COIs required fleet-wide since July 2022), so a current COI is used as the in-service signal for towboats and tugboats, the same way it is for tank barges. Populated after the next data pull."}
+          </p>
+        </SourceCard>
+
+        <SourceCard name="Operator fleets — name-prefix proxy" status="used">
+          <p>
+            PSIX carries <strong>no owner or operator field at all</strong> (confirmed against the service&apos;s
+            full WSDL). Barge fleets are conventionally named with an operator prefix (KIRBY 27715, ING 4782,
+            ACBL 3011), so charts labeled &quot;name prefix&quot; group vessels by the leading token of their
+            name as a proxy for the operator fleet. The resulting rankings independently match trade-press
+            operator rankings, but it is a naming-convention heuristic — indicative, not a registry of record.
+            Vessel-level ownership requires the annual USACE WTLUS company tables (manual).
+          </p>
+        </SourceCard>
+
+        <SourceCard name="BTS National Transportation Statistics (Table 1-34)" status="cross-check-only">
+          <p>
+            Official US DOT figures for US-flag vessels by type and age — the source for the dry-cargo barge
+            (28,902), tank barge (5,815) and towing vessel (6,484) totals shown as benchmarks (data year
+            2022, as reported in ICCT Research Brief ID-284, Feb 2025). bts.gov blocks automated tools, so
+            these figures live in{" "}
+            <code className="rounded bg-slate-800 px-1 py-0.5 text-xs">data/market-reference.json</code> with
+            their citations and are refreshed manually.
+          </p>
+        </SourceCard>
+
         <SourceCard name="Hopper Barges classification" status="used">
           <p>{data?.methodology.hopperBarges ?? "Methodology details are populated after the first data pull."}</p>
         </SourceCard>
@@ -81,9 +110,11 @@ export default function DataSourcesPage() {
         <SourceCard name="Horsepower (Towboats / Tugboats tabs)" status="unavailable">
           <p>
             No free, programmatically-accessible, per-vessel horsepower source was found. PSIX does not
-            carry it. MARAD&apos;s public fleet dashboard turned out to cover only the ~188-vessel deep-sea
-            U.S.-flag fleet (tankers, containerships) — the wrong fleet segment entirely, not inland/coastal
-            barges and towing vessels. This is shown as unavailable rather than estimated.
+            carry it (confirmed against its full WSDL). MARAD&apos;s public fleet dashboard covers only the
+            ~188-vessel deep-sea U.S.-flag fleet — the wrong segment. USACE WTLUS tabulates towboats by
+            horsepower class annually; enter those buckets manually in{" "}
+            <code className="rounded bg-slate-800 px-1 py-0.5 text-xs">data/wcsc-fleet.json</code> to light
+            up the horsepower charts. Never estimated.
           </p>
         </SourceCard>
 
@@ -106,10 +137,10 @@ export default function DataSourcesPage() {
           <p>
             <strong>Status:</strong>{" "}
             {wcscPopulated
-              ? `${wcsc!.counts.dryCargoBarge!.toLocaleString()} in-service dry-cargo barges${
+              ? `${(wcsc!.counts.hopperBarge ?? wcsc!.counts.dryCargoBarge)!.toLocaleString()} in-service dry-cargo barges${
                   wcsc!.dataYear ? ` (WTLUS ${wcsc!.dataYear})` : ""
                 }, entered manually.`
-              : "no WTLUS figure entered yet — the Hopper Barges tab falls back to the PSIX active-record cross-check until one is added."}
+              : "no WTLUS figure entered yet — the Hopper Barges and Deck Barges tabs fall back to PSIX cross-checks and BTS benchmarks until one is added."}
           </p>
         </SourceCard>
 

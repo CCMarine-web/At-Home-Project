@@ -1,6 +1,7 @@
 import { asArray, callPsixOperation } from "./client";
 import type {
   PsixServiceType,
+  PsixVesselDimensionRow,
   PsixVesselDocumentRow,
   PsixVesselParticularsRow,
   PsixVesselSummaryRow,
@@ -30,6 +31,19 @@ export async function getVesselParticulars(
     parsed as { NewDataSet?: { VesselParticulars?: PsixVesselParticularsRow } }
   ).NewDataSet?.VesselParticulars;
   return row ?? null;
+}
+
+export async function getVesselDimensions(
+  vesselId: string
+): Promise<PsixVesselDimensionRow[]> {
+  const parsed = await callPsixOperation(
+    "getVesselDimensionsXMLString",
+    `<VesselID>${vesselId}</VesselID>`
+  );
+  return asArray(
+    (parsed as { NewDataSet?: { VesselDimensions?: PsixVesselDimensionRow | PsixVesselDimensionRow[] } })
+      .NewDataSet?.VesselDimensions
+  );
 }
 
 export async function getVesselDocuments(

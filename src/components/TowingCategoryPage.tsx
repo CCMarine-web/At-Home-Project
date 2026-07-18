@@ -1,12 +1,18 @@
 import Banner from "@/components/Banner";
+import ChartCard from "@/components/ChartCard";
+import AwaitingData from "@/components/AwaitingData";
 import LastUpdated from "@/components/LastUpdated";
 import StatCard from "@/components/StatCard";
 import AgeHistogram from "@/components/charts/AgeHistogram";
+import CoiTimelineChart from "@/components/charts/CoiTimelineChart";
+import Donut from "@/components/charts/Donut";
+import HBar from "@/components/charts/HBar";
+import VBar from "@/components/charts/VBar";
 import { VESSEL_TYPE_COLOR } from "@/lib/colors";
-import { averageAge, computeAgeBuckets, getFleetData, getVesselsByType } from "@/lib/fleetData";
+import { breakdownToPoints, deliveriesByYear } from "@/lib/analytics";
+import { averageAge, computeAgeBuckets, computeCoiTimeline, getFleetData, getVesselsByType } from "@/lib/fleetData";
+import { getWcscFleet } from "@/lib/wcscData";
 import type { VesselType } from "@/lib/types";
-
-const CURRENT_YEAR = 2026;
 
 export default function TowingCategoryPage({
   type,
@@ -16,6 +22,7 @@ export default function TowingCategoryPage({
   title: string;
 }) {
   const data = getFleetData();
+  const wcsc = getWcscFleet();
 
   if (!data) {
     return (
@@ -26,9 +33,20 @@ export default function TowingCategoryPage({
     );
   }
 
+  const now = new Date(data.generatedAt);
+  const currentYear = now.getFullYear();
   const vessels = getVesselsByType(type);
-  const avgAge = averageAge(vessels, CURRENT_YEAR);
-  const ageBuckets = computeAgeBuckets(vessels, CURRENT_YEAR);
+  const inService = data.inServiceCounts?.[type] ?? null;
+  const withCoi = vessels.filter((v) => v.coiExpirationDate);
+  const coiTimeline = computeCoiTimeline(vessels, now);
+
+  const subtypeBreakdown: Record<string, number> = {};
+  for (const v of vessels) {
+    const s = v.serviceSubType || "(none)";
+    subtypeBreakdown[s] = (subtypeBreakdown[s] || 0) + 1;
+  }
+
+  const hpClasses = wcsc?.towboatHpClasses ?? null;
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
@@ -39,17 +57,80 @@ export default function TowingCategoryPage({
 
       <Banner status="warning" title="This split is a proxy, not a Coast Guard classification">
         <p>{data.methodology.towboatsTugboats}</p>
+        {data.methodology.towingInService && <p className="mt-1">{data.methodology.towingInService}</p>}
       </Banner>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <StatCard label={`${title} count`} value={vessels.length.toLocaleString()} accentColor={VESSEL_TYPE_COLOR[type]} />
-        <StatCard label="Average age" value={avgAge !== null ? `${avgAge} yrs` : "—"} />
-        <StatCard label="Horsepower breakdown" value="Unavailable" sublabel="No confirmed government source — see Data Sources tab" />
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <StatCard
+          label={`In-service ${title.toLowerCase()}`}
+          value={inService !== null ? inService.toLocaleString() : "—"}
+          accentColor={VESSEL_TYPE_COLOR[type]}
+          sublabel="COI in force (Subchapter M)"
+        />
+        <StatCard
+          label="PSIX classified records"
+          value={vessels.length.toLocaleString()}
+          sublabel="incl. vessels without a current COI"
+        />
+        <StatCard label="Average age" value={averageAge(vessels, currentYear)?.toString() ?? "—"} sublabel="years" />
+        <StatCard
+          label="Horsepower breakdown"
+          value={hpClasses ? "See chart" : "Awaiting WTLUS"}
+          sublabel="no free per-vessel HP source — see Data Sources"
+        />
       </div>
 
-      <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
-        <h3 className="text-sm font-semibold text-slate-100">Age distribution</h3>
-        <AgeHistogram data={ageBuckets} color={VESSEL_TYPE_COLOR[type]} />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <ChartCard title="Age distribution" source="USCG PSIX build years.">
+          <AgeHistogram data={computeAgeBuckets(vessels, currentYear)} color={VESSEL_TYPE_COLOR[type]} />
+        </ChartCard>
+
+        <ChartCard
+          title="COI expirations by month (next 24 months)"
+          source={`USCG PSIX — Subchapter M COIs on file (${withCoi.length.toLocaleString()} of ${vessels.length.toLocaleString()} records have one). COI renewals drive scheduled survey/drydock work.`}
+        >
+          <CoiTimelineChart data={coiTimeline} color={VESSEL_TYPE_COLOR[type]} />
+        </ChartCard>
+
+        <ChartCard
+          title="Operating-area sub-types"
+          source="USCG PSIX service sub-type — the operating-area basis for the towboat/tugboat split."
+        >
+          <Donut data={breakdownToPoints(subtypeBreakdown, 6, { "(none)": "Not specified" })} unit="vessels" />
+        </ChartCard>
+
+        <ChartCard
+          title="New-build deliveries per year (last 25 years)"
+          source="USCG PSIX build years."
+        >
+          <VBar
+            data={deliveriesByYear(vessels, currentYear - 25, currentYear)}
+            color={VESSEL_TYPE_COLOR[type]}
+            unit="vessels delivered"
+          />
+        </ChartCard>
+
+        {hpClasses && hpClasses.length > 0 ? (
+          <ChartCard
+            title={`Towing fleet by horsepower class (WTLUS${wcsc?.dataYear ? ` ${wcsc.dataYear}` : ""})`}
+            source={wcsc?.source}
+          >
+            <HBar
+              data={hpClasses.map((r) => ({ label: r.label, value: r.count }))}
+              color={VESSEL_TYPE_COLOR[type]}
+              unit="vessels"
+            />
+          </ChartCard>
+        ) : (
+          <AwaitingData title="Fleet by horsepower class">
+            <p>
+              PSIX carries no horsepower data and no free per-vessel source exists. USACE WTLUS tabulates
+              towboats by horsepower class annually — retrieve it manually (see Data Sources) and enter the
+              buckets in <code className="rounded bg-slate-800 px-1 py-0.5 text-xs">data/wcsc-fleet.json</code>{" "}
+              to light this chart up.
+            </p>
+          </AwaitingData>
+        )}
       </div>
     </div>
   );

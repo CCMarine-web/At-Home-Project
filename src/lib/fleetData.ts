@@ -14,9 +14,16 @@ export interface FleetData {
   testMode: boolean;
   vessels: Vessel[];
   counts: Record<VesselType, number>;
+  /** COI-in-force counts for the inspected categories; null where no COI signal exists (hoppers). */
+  inServiceCounts?: Record<VesselType, number | null>;
+  /** Subchapter M towing fleet summary across ALL active towing records (incl. unclassified sub-types). */
+  towingFleet?: { activeRecords: number; withCoiRecord: number; coiInForce: number };
+  /** Cargo sub-type breakdown for in-service tank barges. */
+  tankSubtypeBreakdown?: Record<string, number>;
   benchmarkFlags: BenchmarkFlag[];
   methodology: {
     tankBarges?: string;
+    towingInService?: string;
     hopperBarges: string;
     towboatsTugboats: string;
     towingSubtypeBreakdown: Record<string, number>;

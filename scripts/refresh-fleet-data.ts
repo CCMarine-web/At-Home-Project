@@ -22,6 +22,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
+  getVesselDimensions,
   getVesselDocuments,
   getVesselParticulars,
   getVesselSummaries,
@@ -44,6 +45,8 @@ const BENCHMARKS: Partial<Record<VesselType, number>> = {
 interface Checkpoint {
   towingSubTypes: Record<string, string>;
   documents: Record<string, { issue: string | null; expiration: string | null; status: string | null }>;
+  /** Cargo sub-type + hull dimensions, fetched only for in-service tank barges. */
+  tankDetails: Record<string, { subType: string; length: number | null; breadth: number | null }>;
 }
 
 function parseLimitArg(): number | null {
@@ -56,9 +59,10 @@ function parseLimitArg(): number | null {
 async function loadCheckpoint(): Promise<Checkpoint> {
   try {
     const raw = await readFile(CHECKPOINT_PATH, "utf-8");
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return { towingSubTypes: {}, documents: {}, tankDetails: {}, ...parsed };
   } catch {
-    return { towingSubTypes: {}, documents: {} };
+    return { towingSubTypes: {}, documents: {}, tankDetails: {} };
   }
 }
 
@@ -98,7 +102,7 @@ async function main() {
   const startedAt = Date.now();
   console.log(`Starting fleet refresh${limit ? ` (TEST MODE, limit=${limit} per category)` : ""}...`);
 
-  console.log("\n[1/4] Fetching vessel summaries for each PSIX service category...");
+  console.log("\n[1/6] Fetching vessel summaries for each PSIX service category...");
   const serviceTypes: PsixServiceType[] = ["Tank Barge", "Freight Barge", "Towing Vessel"];
   const active: Record<PsixServiceType, PsixVesselSummaryRow[]> = {
     "Tank Barge": [],
@@ -123,7 +127,7 @@ async function main() {
   // category (see file header for the Freight Barge -> hopper_barge caveat).
   // Only Towing Vessel needs a per-vessel particulars lookup, since the
   // towboat/tugboat proxy depends on ServiceSubType.
-  console.log("\n[2/4] Fetching per-vessel service sub-type for Towing Vessels (for the towboat/tugboat proxy)...");
+  console.log("\n[2/6] Fetching per-vessel service sub-type for Towing Vessels (for the towboat/tugboat proxy)...");
   const checkpoint = await loadCheckpoint();
   const towingRows = active["Towing Vessel"];
   const stillNeeded = towingRows.filter(
@@ -152,7 +156,7 @@ async function main() {
   );
   await saveCheckpoint(checkpoint);
 
-  console.log("\n[3/4] Classifying vessels and fetching COI documents for tank barges...");
+  console.log("\n[3/6] Classifying vessels and fetching COI documents for tank barges...");
   const towingSubtypeBreakdown: Record<string, number> = {};
   const classified: Array<{
     vesselId: string;
@@ -222,39 +226,104 @@ async function main() {
   );
   await saveCheckpoint(checkpoint);
 
-  console.log("\n[4/4] Building final dataset...");
+  // COI-in-force = latest COI's expiration date is still in the future.
+  const coiInForce = (id: string): boolean => {
+    const exp = checkpoint.documents[id]?.expiration;
+    if (!exp) return false;
+    const t = new Date(exp).getTime();
+    return Number.isFinite(t) && t >= startedAt;
+  };
+
+  // Towing vessels are inspected under 46 CFR Subchapter M (COIs required for
+  // the whole US towing fleet since July 2022), so a current COI is a real
+  // in-service signal for them just as it is for tank barges. Fetch documents
+  // for EVERY active towing record -- not just the towboat/tugboat-classified
+  // subset -- so the total in-service towing fleet can be reported accurately.
+  console.log("\n[4/6] Fetching COI documents for all active Towing Vessel records (Subchapter M)...");
+  const towingIds = active["Towing Vessel"].map((r) => String(r.VesselId));
+  const towingNeedDocs = towingIds.filter((id) => checkpoint.documents[id] === undefined);
+  console.log(
+    `  ${towingIds.length} towing vessels, ${towingIds.length - towingNeedDocs.length} already cached, ${towingNeedDocs.length} to fetch`
+  );
+  let towDocsSinceCheckpoint = 0;
+  await mapWithConcurrency(
+    towingNeedDocs,
+    PSIX_LANES,
+    async (id) => {
+      const docs = await getVesselDocuments(id);
+      checkpoint.documents[id] = extractLatestCoi(docs);
+      towDocsSinceCheckpoint += 1;
+      if (towDocsSinceCheckpoint % 100 === 0) await saveCheckpoint(checkpoint);
+      return docs;
+    },
+    (done, total, failed) => {
+      if (done % 250 === 0 || done === total) {
+        console.log(`  towing COI documents: ${done}/${total} (${failed} failed so far)`);
+      }
+    }
+  );
+  await saveCheckpoint(checkpoint);
+
+  // In-service filtering for tank barges (see docs/data-methodology.md):
+  // a tank barge legally cannot carry cargo without a valid COI, and MISLE's
+  // coarse "Active" record-status keeps scrapped hulls for decades (GAO-20-562).
+  const inServiceTankIds = tankBarges.filter((v) => coiInForce(v.vesselId)).map((v) => v.vesselId);
+
+  console.log("\n[5/6] Fetching cargo sub-type and hull dimensions for in-service tank barges...");
+  const tanksNeedDetails = inServiceTankIds.filter((id) => checkpoint.tankDetails[id] === undefined);
+  console.log(
+    `  ${inServiceTankIds.length} in-service tank barges, ${inServiceTankIds.length - tanksNeedDetails.length} already cached, ${tanksNeedDetails.length} to fetch`
+  );
+  let detailsSinceCheckpoint = 0;
+  await mapWithConcurrency(
+    tanksNeedDetails,
+    PSIX_LANES,
+    async (id) => {
+      const particulars = await getVesselParticulars(id);
+      const dims = await getVesselDimensions(id);
+      const hull =
+        dims.find((d) => (d.DimensionTypeLookupName ?? "").includes("Simplified") && d.LengthInFeet) ??
+        dims.find((d) => d.LengthInFeet);
+      checkpoint.tankDetails[id] = {
+        subType: particulars?.ServiceSubType ?? "",
+        length: typeof hull?.LengthInFeet === "number" ? hull.LengthInFeet : null,
+        breadth: typeof hull?.BreadthInFeet === "number" ? hull.BreadthInFeet : null,
+      };
+      detailsSinceCheckpoint += 1;
+      if (detailsSinceCheckpoint % 100 === 0) await saveCheckpoint(checkpoint);
+      return null;
+    },
+    (done, total, failed) => {
+      if (done % 250 === 0 || done === total) {
+        console.log(`  tank details: ${done}/${total} (${failed} failed so far)`);
+      }
+    }
+  );
+  await saveCheckpoint(checkpoint);
+
+  console.log("\n[6/6] Building final dataset...");
   const allClassified: Vessel[] = classified.map((v) => {
     const coi = checkpoint.documents[v.vesselId];
+    const details = v.type === "tank_barge" ? checkpoint.tankDetails[v.vesselId] : undefined;
     return {
       id: v.vesselId,
       name: v.name,
       type: v.type,
-      serviceSubType: v.serviceSubType,
+      serviceSubType: details?.subType || v.serviceSubType,
       buildYear: v.buildYear,
       coiIssueDate: coi?.issue ?? null,
       coiExpirationDate: coi?.expiration ?? null,
       coiStatus: coi?.status ?? null,
+      lengthFeet: details?.length ?? null,
+      breadthFeet: details?.breadth ?? null,
       grossTons: null,
       horsepower: null,
     };
   });
 
-  // In-service filtering for tank barges.
-  // A tank barge legally cannot carry cargo without a valid (unexpired)
-  // Certificate of Inspection, so a barge whose latest COI has already expired --
-  // or that has no COI on record at all -- is treated as out of service and
-  // excluded from the count. MISLE's coarse "Active" record-status keeps
-  // scrapped/retired hulls for decades (GAO-20-562), which is why the raw active
-  // count runs ~2x the in-service tank fleet. See docs/data-methodology.md.
-  const hasUnexpiredCoi = (v: Vessel): boolean => {
-    if (!v.coiExpirationDate) return false;
-    const t = new Date(v.coiExpirationDate).getTime();
-    return Number.isFinite(t) && t >= startedAt;
-  };
-
   const rawTankBarges = allClassified.filter((v) => v.type === "tank_barge").length;
   const vessels: Vessel[] = allClassified.filter((v) =>
-    v.type === "tank_barge" ? hasUnexpiredCoi(v) : true
+    v.type === "tank_barge" ? coiInForce(v.id) : true
   );
   const keptTankBarges = vessels.filter((v) => v.type === "tank_barge").length;
   console.log(
@@ -271,6 +340,28 @@ async function main() {
   };
   for (const v of vessels) counts[v.type] += 1;
 
+  // In-service counts: COI-in-force for the inspected categories (tank barges,
+  // Subchapter M towing vessels); hopper/freight barges are uninspected, so no
+  // COI signal exists and the in-service figure must come from WCSC (manual).
+  const inServiceCounts = {
+    tank_barge: keptTankBarges,
+    hopper_barge: null as number | null,
+    towboat: vessels.filter((v) => v.type === "towboat" && coiInForce(v.id)).length,
+    tugboat: vessels.filter((v) => v.type === "tugboat" && coiInForce(v.id)).length,
+  };
+
+  const towingFleet = {
+    activeRecords: towingIds.length,
+    withCoiRecord: towingIds.filter((id) => checkpoint.documents[id]?.expiration).length,
+    coiInForce: towingIds.filter((id) => coiInForce(id)).length,
+  };
+
+  const tankSubtypeBreakdown: Record<string, number> = {};
+  for (const id of inServiceTankIds) {
+    const s = checkpoint.tankDetails[id]?.subType || "(none)";
+    tankSubtypeBreakdown[s] = (tankSubtypeBreakdown[s] || 0) + 1;
+  }
+
   const benchmarkFlags = Object.entries(BENCHMARKS).map(([type, benchmark]) => {
     const actual = counts[type as VesselType];
     const ratio = actual / benchmark;
@@ -282,8 +373,13 @@ async function main() {
     testMode: Boolean(limit),
     vessels,
     counts,
+    inServiceCounts,
+    towingFleet,
+    tankSubtypeBreakdown,
     benchmarkFlags,
     methodology: {
+      towingInService:
+        "Towing vessels are inspected under 46 CFR Subchapter M -- COIs have been required across the US towing fleet since July 2022 -- so a towing vessel whose latest COI is unexpired is counted as in service. Towboat/tugboat headline counts use this filter; vessels with no COI on record in PSIX remain in the table but are excluded from the in-service figure.",
       tankBarges:
         "Counted only tank barges whose latest Certificate of Inspection is unexpired as of the pull date. A valid COI is legally required to carry cargo, so barges with an expired or missing COI -- retired/scrapped hulls that MISLE still flags 'Active' (GAO-20-562) -- are excluded. This drops the raw active count (~8,000) to the in-service fleet (~4,400), in line with industry figures.",
       hopperBarges:

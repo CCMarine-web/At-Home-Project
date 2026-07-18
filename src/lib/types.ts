@@ -9,6 +9,8 @@ export interface Vessel {
   coiIssueDate: string | null;
   coiExpirationDate: string | null;
   coiStatus: string | null;
+  lengthFeet: number | null;
+  breadthFeet: number | null;
   grossTons: number | null;
   horsepower: number | null;
 }

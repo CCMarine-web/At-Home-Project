@@ -1,12 +1,16 @@
 import Banner from "@/components/Banner";
+import ChartCard from "@/components/ChartCard";
 import LastUpdated from "@/components/LastUpdated";
 import StatCard from "@/components/StatCard";
 import AgeHistogram from "@/components/charts/AgeHistogram";
+import Donut from "@/components/charts/Donut";
+import HBar from "@/components/charts/HBar";
+import VBar from "@/components/charts/VBar";
 import { VESSEL_TYPE_COLOR } from "@/lib/colors";
+import { ageComposition, agingSharePct, deliveriesByYear, fleetNamePrefixes } from "@/lib/analytics";
 import { averageAge, computeAgeBuckets, getFleetData, getVesselsByType } from "@/lib/fleetData";
+import { getMarketReference } from "@/lib/marketReference";
 import { getWcscFleet } from "@/lib/wcscData";
-
-const CURRENT_YEAR = 2026;
 
 export default function HopperBargesPage() {
   const data = getFleetData();
@@ -20,10 +24,18 @@ export default function HopperBargesPage() {
     );
   }
 
+  const now = new Date(data.generatedAt);
+  const currentYear = now.getFullYear();
   const vessels = getVesselsByType("hopper_barge");
   const wcsc = getWcscFleet();
-  const wcscCount = wcsc?.counts.dryCargoBarge ?? null;
+  const ref = getMarketReference();
+  const wcscCount = wcsc?.counts.hopperBarge ?? wcsc?.counts.dryCargoBarge ?? null;
   const yearSuffix = wcsc?.dataYear ? ` ${wcsc.dataYear}` : "";
+
+  const prefixes = fleetNamePrefixes(vessels, 15);
+  const deliveries = deliveriesByYear(vessels, currentYear - 25, currentYear);
+  const ages = ageComposition(vessels, currentYear);
+  const aging = agingSharePct(vessels, currentYear);
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
@@ -35,47 +47,89 @@ export default function HopperBargesPage() {
       {wcscCount != null ? (
         <Banner status="good" title="Headline figure is the USACE in-service dry-cargo barge count">
           <p>
-            The headline is the authoritative in-service dry-cargo (open + covered hopper) barge total from
-            USACE&apos;s Waterborne Commerce Statistics Center (WTLUS{yearSuffix}), retrieved manually. The
-            PSIX-derived number below counts PSIX&apos;s entire active-record Freight Barge category —
-            including long-retired hulls MISLE never deactivates — and is kept only as a cross-check.
+            The headline is the authoritative in-service count from USACE&apos;s Waterborne Commerce
+            Statistics Center (WTLUS{yearSuffix}), retrieved manually. The PSIX record count below includes
+            long-retired hulls MISLE never deactivates and is kept only as a cross-check.
           </p>
         </Banner>
       ) : (
-        <Banner status="critical" title="Awaiting the authoritative WTLUS figure">
+        <Banner status="critical" title="No verified in-service hopper count is available yet">
           <p>{data.methodology.hopperBarges}</p>
           <p className="mt-1">
-            The real in-service count comes from USACE WTLUS (~18,000) and must be entered manually into{" "}
-            <code className="rounded bg-slate-800 px-1 py-0.5 text-xs">data/wcsc-fleet.json</code> — see the
-            Data Sources tab. Until then, the number below is PSIX&apos;s entire dry-cargo-barge category and
-            overstates the in-service hopper fleet roughly threefold.
+            Hopper barges are uninspected (no COI), so PSIX offers no in-service signal. The industry
+            benchmark is ~{(ref?.industryBenchmarks.hopperBargesInService ?? 18000).toLocaleString()}{" "}
+            in-service hoppers; the authoritative count comes from USACE WTLUS and must be entered manually
+            into <code className="rounded bg-slate-800 px-1 py-0.5 text-xs">data/wcsc-fleet.json</code>.
+            Every PSIX-derived chart below covers the whole active-record dry-cargo category — trends and
+            shares are informative, absolute totals overstate the working fleet.
           </p>
         </Banner>
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        {wcscCount != null && (
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {wcscCount != null ? (
           <StatCard
-            label={`In-service dry-cargo barges (USACE WCSC${yearSuffix})`}
+            label={`In-service (USACE WCSC${yearSuffix})`}
             value={wcscCount.toLocaleString()}
             accentColor={VESSEL_TYPE_COLOR.hopper_barge}
           />
+        ) : (
+          <StatCard
+            label="Industry benchmark (in service)"
+            value={`~${(ref?.industryBenchmarks.hopperBargesInService ?? 18000).toLocaleString()}`}
+            accentColor={VESSEL_TYPE_COLOR.hopper_barge}
+            sublabel="Waterways Journal fleet survey"
+          />
         )}
         <StatCard
-          label="PSIX active-record cross-check (includes retired hulls)"
+          label="PSIX active records"
           value={vessels.length.toLocaleString()}
-          accentColor={wcscCount != null ? undefined : VESSEL_TYPE_COLOR.hopper_barge}
+          sublabel="all dry-cargo types, incl. retired hulls"
         />
-        <StatCard
-          label="Average age"
-          value={averageAge(vessels, CURRENT_YEAR)?.toString() ?? "—"}
-          sublabel="years (PSIX records)"
-        />
+        <StatCard label="Average age" value={averageAge(vessels, currentYear)?.toString() ?? "—"} sublabel="years (PSIX records)" />
+        <StatCard label="Records 30+ years old" value={aging !== null ? `${aging}%` : "—"} sublabel="share of PSIX records" />
       </div>
 
-      <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
-        <h3 className="text-sm font-semibold text-slate-100">Age distribution (PSIX records)</h3>
-        <AgeHistogram data={computeAgeBuckets(vessels, CURRENT_YEAR)} color={VESSEL_TYPE_COLOR.hopper_barge} />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <ChartCard
+          title="Major fleets by name prefix"
+          source="Fleet name prefix (ING = Ingram, ACBL, ART = ARTCo…) — a naming-convention proxy; PSIX has no owner field. Counts are PSIX records (incl. retired hulls), so read relative fleet sizes, not absolute counts."
+        >
+          <HBar data={prefixes} color={VESSEL_TYPE_COLOR.hopper_barge} unit="PSIX records" />
+        </ChartCard>
+
+        <ChartCard
+          title="Reported operator fleets (trade press)"
+          source={ref?.majorDryCargoOperators.source ?? "Trade press"}
+        >
+          {ref ? (
+            <HBar
+              data={ref.majorDryCargoOperators.operators.map((o) => ({
+                label: o.name.split(" (")[0],
+                value: o.dryCargoBarges,
+              }))}
+              color={VESSEL_TYPE_COLOR.hopper_barge}
+              unit="barges (reported, approx.)"
+            />
+          ) : (
+            <p className="text-sm text-slate-400">Reference data unavailable.</p>
+          )}
+        </ChartCard>
+
+        <ChartCard title="Build-year distribution" source="USCG PSIX build years, all active dry-cargo barge records.">
+          <AgeHistogram data={computeAgeBuckets(vessels, currentYear)} color={VESSEL_TYPE_COLOR.hopper_barge} />
+        </ChartCard>
+
+        <ChartCard title="Fleet age composition" source="USCG PSIX build years, all active dry-cargo barge records.">
+          <Donut data={ages} unit="records" />
+        </ChartCard>
+
+        <ChartCard
+          title={`New-build deliveries per year (last 25 years)`}
+          source="USCG PSIX build years. Recent years are the most reliable slice of the PSIX category, since new records are current."
+        >
+          <VBar data={deliveries} color={VESSEL_TYPE_COLOR.hopper_barge} unit="barges delivered" />
+        </ChartCard>
       </div>
     </div>
   );

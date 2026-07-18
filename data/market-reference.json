@@ -1,0 +1,32 @@
+{
+  "_readme": "Sourced industry reference figures used for benchmarks and executive context. Every number here was manually verified against the cited source on retrievedAt. These are NOT derived from PSIX. Refresh by re-checking the sources in a normal browser (both bts.gov and the trade press block automated tools).",
+  "retrievedAt": "2026-07-17",
+  "btsFleet": {
+    "source": "US DOT Bureau of Transportation Statistics, National Transportation Statistics Table 1-34 (US-Flag Vessels by Type and Age), as reported in ICCT Research Brief ID-284 'Overview of Inland Waterway Transportation in the United States' (Feb 2025)",
+    "sourceUrl": "https://www.bts.gov/content/us-flag-vessels-type-and-age",
+    "dataYear": 2022,
+    "counts": {
+      "drycargoBarges": 28902,
+      "tankBarges": 5815,
+      "towboatsAndTugs": 6484,
+      "selfPropelledDryCargo": 220,
+      "selfPropelledTanker": 79
+    },
+    "notes": "Non-self-propelled dry-cargo barges include hopper, deck, covered and other dry barge types combined. Per the same source, more than 50% of towboats/tugboats have been in service over 25 years and under 10% of vessels are less than 6 years old across categories."
+  },
+  "industryBenchmarks": {
+    "source": "Waterways Journal annual barge fleet survey (trade press, subscription-gated)",
+    "tankBargesInService": 4000,
+    "hopperBargesInService": 18000
+  },
+  "majorDryCargoOperators": {
+    "source": "Marine News / maritimemagazines.com, 'Inland Barge Industry Powers the U.S. Economy' (Aug 2025), reporting USACE-sourced fleet figures",
+    "sourceUrl": "https://www.maritimemagazines.com/marine-news/202508/inland-barge-industry-powers-the-us-economy/",
+    "totalBargeFleet": "more than 22,000 units",
+    "operators": [
+      { "name": "Ingram Barge (incl. SEACOR inland acquisition, 2024)", "dryCargoBarges": 3900, "approx": true },
+      { "name": "American Commercial Barge Line (ACBL)", "dryCargoBarges": 3000, "approx": true },
+      { "name": "ARTCo (ADM)", "dryCargoBarges": 1800, "approx": true }
+    ]
+  }
+}

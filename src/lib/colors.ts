@@ -15,6 +15,20 @@ export const VESSEL_TYPE_LABEL: Record<string, string> = {
   tugboat: "Tugboats",
 };
 
+// Categorical cycle for multi-slice charts (donuts, multi-series lines) on the
+// dark surface. First four match the vessel-type slots so shared categories
+// keep their colors across charts.
+export const CHART_CATEGORICAL = [
+  "#4ea3f0", // blue
+  "#34c759", // green
+  "#f5844a", // orange
+  "#9a86f0", // violet
+  "#e8c547", // gold
+  "#5bc8c4", // teal
+  "#ef7fb1", // pink
+  "#94a3b8", // slate (used for "Other")
+];
+
 export const STATUS_COLOR = {
   good: "#22c55e",
   warning: "#fbbf24",

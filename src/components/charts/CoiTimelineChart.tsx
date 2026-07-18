@@ -4,7 +4,13 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { CHART_INK, VESSEL_TYPE_COLOR } from "@/lib/colors";
 import type { CoiTimelinePoint } from "@/lib/fleetData";
 
-export default function CoiTimelineChart({ data }: { data: CoiTimelinePoint[] }) {
+export default function CoiTimelineChart({
+  data,
+  color = VESSEL_TYPE_COLOR.tank_barge,
+}: {
+  data: CoiTimelinePoint[];
+  color?: string;
+}) {
   return (
     <ResponsiveContainer width="100%" height={280}>
       <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 8 }}>
@@ -34,7 +40,7 @@ export default function CoiTimelineChart({ data }: { data: CoiTimelinePoint[] })
           labelStyle={{ color: CHART_INK.secondary }}
           formatter={(value) => [`${value} COIs`, "Expiring"]}
         />
-        <Bar dataKey="count" fill={VESSEL_TYPE_COLOR.tank_barge} radius={[4, 4, 0, 0]} maxBarSize={20} />
+        <Bar dataKey="count" fill={color} radius={[4, 4, 0, 0]} maxBarSize={20} />
       </BarChart>
     </ResponsiveContainer>
   );

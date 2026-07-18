@@ -28,7 +28,7 @@ export default function DashboardPage() {
   const tankBarges = data.vessels.filter((v) => v.type === "tank_barge");
   const coi = computeCoiBuckets(tankBarges, NOW);
   const wcsc = getWcscFleet();
-  const wcscHopper = wcsc?.counts.dryCargoBarge ?? null;
+  const wcscHopper = wcsc?.counts.hopperBarge ?? wcsc?.counts.dryCargoBarge ?? null;
   // Once the authoritative WTLUS in-service hopper figure is entered, the hopper
   // card shows it instead of the inflated PSIX active-record count, so drop
   // hopper from the benchmark-mismatch warning.
@@ -60,13 +60,20 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {VESSEL_TYPES.map((type) => {
           const wcscOverride = type === "hopper_barge" ? wcscHopper : null;
+          const inService = wcscOverride ?? data.inServiceCounts?.[type] ?? null;
           return (
             <StatCard
               key={type}
               label={VESSEL_TYPE_LABEL[type]}
-              value={(wcscOverride ?? data.counts[type]).toLocaleString()}
+              value={(inService ?? data.counts[type]).toLocaleString()}
               accentColor={VESSEL_TYPE_COLOR[type]}
-              sublabel={wcscOverride != null ? "in-service (USACE WCSC)" : undefined}
+              sublabel={
+                wcscOverride != null
+                  ? "in-service (USACE WCSC)"
+                  : inService != null
+                  ? "in-service (COI in force)"
+                  : "PSIX active records"
+              }
             />
           );
         })}

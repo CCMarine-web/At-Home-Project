@@ -27,6 +27,14 @@ export interface PsixVesselParticularsRow {
   IdentificationTypeLookupName?: string;
 }
 
+export interface PsixVesselDimensionRow {
+  VesselId?: string;
+  DimensionTypeLookupName?: string;
+  BreadthInFeet?: number;
+  DepthInFeet?: number;
+  LengthInFeet?: number;
+}
+
 export interface PsixVesselDocumentRow {
   VesselID?: string;
   TypeLookupName?: string;

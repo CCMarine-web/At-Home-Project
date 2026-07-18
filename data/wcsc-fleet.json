@@ -7,15 +7,19 @@
   "howToUpdate": [
     "1. Open sourceUrl in a normal web browser (automated tools get a 403).",
     "2. In WTLUS Volume 1 (National Summaries), find the national vessel totals by type.",
-    "3. Enter the dry-cargo barge total (open + covered hopper) in counts.dryCargoBarge.",
-    "4. Enter the tank barge total in counts.tankBarge and the towboat/tugboat total in counts.towboatTugboat (optional, for cross-check).",
+    "3. Enter the dry-cargo hopper barge total (open + covered) in counts.hopperBarge, the deck barge total in counts.deckBarge, tank barges in counts.tankBarge, and towboats/tugboats in counts.towboatTugboat.",
+    "4. WTLUS also tabulates towboats by horsepower class and barges by dimensions: fill towboatHpClasses and deckBargeSizeRanges as arrays of {label, count} buckets, matching however the tables bucket them (leave null if you skip them).",
     "5. Set dataYear to the WTLUS calendar year and retrievedAt to today's date (YYYY-MM-DD).",
-    "6. Commit and push. Vercel redeploys, and the Hopper Barges tab switches its headline to this in-service figure automatically.",
-    "Leave a count as null until you have the real figure — the app falls back to the PSIX cross-check and shows an 'awaiting WTLUS' notice while it is null."
+    "6. Commit and push. Vercel redeploys, and the affected tabs (Hopper Barges, Deck Barges, Towboats, Tugboats) switch their gated charts to this data automatically.",
+    "Leave any value as null until you have the real figure — the app shows an 'awaiting WTLUS' notice for null values instead of inventing numbers."
   ],
   "counts": {
     "dryCargoBarge": null,
+    "hopperBarge": null,
+    "deckBarge": null,
     "tankBarge": null,
     "towboatTugboat": null
-  }
+  },
+  "deckBargeSizeRanges": null,
+  "towboatHpClasses": null
 }
