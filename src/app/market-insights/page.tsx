@@ -59,16 +59,23 @@ export default function MarketInsightsPage() {
   const totalDrydockDemand12mo =
     dueNext12mo(byType.tank_barge) + dueNext12mo(byType.towboat) + dueNext12mo(byType.tugboat);
 
-  // In-service fleet by segment, each from its best available source.
-  const hopperInService = wcsc?.counts.hopperBarge ?? wcsc?.counts.dryCargoBarge ?? null;
+  // In-service fleet by segment. Each segment is a DISJOINT vessel class and
+  // each takes its value from exactly one source (labeled below) — sources are
+  // never summed with each other. Hopper and deck barges are separate WTLUS
+  // categories (verified disjoint by vessel ID), so no hull appears twice.
+  const hopperInService = wcsc?.counts.hopperBarge ?? null;
+  const deckInService = wcsc?.counts.deckBarge ?? null;
   const fleetBySegment = [
-    { label: "Dry-cargo barges", value: hopperInService ?? ref?.btsFleet.counts.drycargoBarges ?? 0 },
+    ...(hopperInService != null
+      ? [{ label: "Hopper barges", value: hopperInService }]
+      : [{ label: "Dry-cargo barges (all types)", value: ref?.btsFleet.counts.drycargoBarges ?? 0 }]),
+    ...(deckInService != null ? [{ label: "Deck barges", value: deckInService }] : []),
     { label: "Tank barges", value: data.inServiceCounts?.tank_barge ?? data.counts.tank_barge },
     { label: "Towing vessels", value: data.towingFleet?.coiInForce ?? data.counts.towboat + data.counts.tugboat },
   ];
   const fleetSources = [
     hopperInService != null
-      ? "dry-cargo barges: USACE WTLUS (manual)"
+      ? `hopper + deck barges: USACE WTLUS ${wcsc?.dataYear ?? ""} (disjoint categories)`
       : `dry-cargo barges: BTS Table 1-34, ${ref?.btsFleet.dataYear ?? "n/a"} (all dry types incl. deck)`,
     "tank barges: PSIX, COI in force",
     "towing vessels: PSIX, Subchapter M COI in force (all operating areas)",
@@ -126,14 +133,18 @@ export default function MarketInsightsPage() {
           sublabel="PSIX, Subchapter M COI in force"
         />
         <StatCard
-          label="US dry-cargo barges"
+          label={hopperInService != null ? "In-service hopper barges" : "US dry-cargo barges (all types)"}
           value={
             hopperInService != null
               ? hopperInService.toLocaleString()
               : (ref?.btsFleet.counts.drycargoBarges ?? 0).toLocaleString()
           }
           accentColor={VESSEL_TYPE_COLOR.hopper_barge}
-          sublabel={hopperInService != null ? "USACE WTLUS" : `BTS official, ${ref?.btsFleet.dataYear ?? "n/a"}`}
+          sublabel={
+            hopperInService != null
+              ? `USACE WTLUS ${wcsc?.dataYear ?? ""} — deck barges counted separately`
+              : `BTS official, ${ref?.btsFleet.dataYear ?? "n/a"}`
+          }
         />
       </div>
 
@@ -181,23 +192,36 @@ export default function MarketInsightsPage() {
           <VBar data={replacementPressure} color={VESSEL_TYPE_COLOR.towboat} unit="% of records" />
         </ChartCard>
 
-        <ChartCard
-          title="Reported major dry-cargo operators"
-          source={ref?.majorDryCargoOperators.source ?? "Trade press"}
-        >
-          {ref ? (
+        {wcsc?.topOperators?.hopperBarge ? (
+          <ChartCard
+            title={`Top hopper barge operators (WTLUS ${wcsc.dataYear ?? ""})`}
+            source="USACE WCSC operator of record — authoritative annual survey."
+          >
             <HBar
-              data={ref.majorDryCargoOperators.operators.map((o) => ({
-                label: o.name.split(" (")[0],
-                value: o.dryCargoBarges,
-              }))}
+              data={wcsc.topOperators.hopperBarge.map((o) => ({ label: o.name, value: o.count }))}
               color={VESSEL_TYPE_COLOR.hopper_barge}
-              unit="barges (reported, approx.)"
+              unit="barges"
             />
-          ) : (
-            <p className="text-sm text-slate-400">Reference data unavailable.</p>
-          )}
-        </ChartCard>
+          </ChartCard>
+        ) : (
+          <ChartCard
+            title="Reported major dry-cargo operators"
+            source={ref?.majorDryCargoOperators.source ?? "Trade press"}
+          >
+            {ref ? (
+              <HBar
+                data={ref.majorDryCargoOperators.operators.map((o) => ({
+                  label: o.name.split(" (")[0],
+                  value: o.dryCargoBarges,
+                }))}
+                color={VESSEL_TYPE_COLOR.hopper_barge}
+                unit="barges (reported, approx.)"
+              />
+            ) : (
+              <p className="text-sm text-slate-400">Reference data unavailable.</p>
+            )}
+          </ChartCard>
+        )}
       </div>
 
       <Banner status="warning" title="Reading these figures">

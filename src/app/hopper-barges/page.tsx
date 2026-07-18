@@ -29,7 +29,8 @@ export default function HopperBargesPage() {
   const vessels = getVesselsByType("hopper_barge");
   const wcsc = getWcscFleet();
   const ref = getMarketReference();
-  const wcscCount = wcsc?.counts.hopperBarge ?? wcsc?.counts.dryCargoBarge ?? null;
+  // Hopper-specific WTLUS count only — dryCargoBarge includes deck barges.
+  const wcscCount = wcsc?.counts.hopperBarge ?? null;
   const yearSuffix = wcsc?.dataYear ? ` ${wcsc.dataYear}` : "";
 
   const prefixes = fleetNamePrefixes(vessels, 15);
@@ -98,23 +99,36 @@ export default function HopperBargesPage() {
           <HBar data={prefixes} color={VESSEL_TYPE_COLOR.hopper_barge} unit="PSIX records" />
         </ChartCard>
 
-        <ChartCard
-          title="Reported operator fleets (trade press)"
-          source={ref?.majorDryCargoOperators.source ?? "Trade press"}
-        >
-          {ref ? (
+        {wcsc?.topOperators?.hopperBarge ? (
+          <ChartCard
+            title={`Top hopper barge operators (WTLUS${yearSuffix})`}
+            source="USACE WCSC operator of record — authoritative annual survey, not a proxy."
+          >
             <HBar
-              data={ref.majorDryCargoOperators.operators.map((o) => ({
-                label: o.name.split(" (")[0],
-                value: o.dryCargoBarges,
-              }))}
+              data={wcsc.topOperators.hopperBarge.map((o) => ({ label: o.name, value: o.count }))}
               color={VESSEL_TYPE_COLOR.hopper_barge}
-              unit="barges (reported, approx.)"
+              unit="barges"
             />
-          ) : (
-            <p className="text-sm text-slate-400">Reference data unavailable.</p>
-          )}
-        </ChartCard>
+          </ChartCard>
+        ) : (
+          <ChartCard
+            title="Reported operator fleets (trade press)"
+            source={ref?.majorDryCargoOperators.source ?? "Trade press"}
+          >
+            {ref ? (
+              <HBar
+                data={ref.majorDryCargoOperators.operators.map((o) => ({
+                  label: o.name.split(" (")[0],
+                  value: o.dryCargoBarges,
+                }))}
+                color={VESSEL_TYPE_COLOR.hopper_barge}
+                unit="barges (reported, approx.)"
+              />
+            ) : (
+              <p className="text-sm text-slate-400">Reference data unavailable.</p>
+            )}
+          </ChartCard>
+        )}
 
         <ChartCard title="Build-year distribution" source="USCG PSIX build years, all active dry-cargo barge records.">
           <AgeHistogram data={computeAgeBuckets(vessels, currentYear)} color={VESSEL_TYPE_COLOR.hopper_barge} />

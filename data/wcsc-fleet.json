@@ -1,25 +1,344 @@
 {
-  "source": "USACE Waterborne Commerce Statistics Center — Waterborne Transportation Lines of the United States (WTLUS), Volume 1: National Summaries",
+  "source": "USACE Waterborne Commerce Statistics Center — WTLUS / Vessel Characteristics per-vessel Excel files",
   "sourceUrl": "https://www.iwr.usace.army.mil/About/Technical-Centers/WCSC-Waterborne-Commerce-Statistics-Center/WCSC-Vessel-Characteristics/",
-  "retrievalMethod": "Retrieved MANUALLY once per year. The WCSC portal blocks automated tools (HTTP 403), so this is NOT part of the automated weekly PSIX refresh. Pull it via a normal browser, the W-DAPP tool, or a direct records request to WCSC.",
-  "dataYear": null,
-  "retrievedAt": null,
+  "retrievalMethod": "Downloaded manually in a browser (the portal 403s automated tools), then parsed with scripts/parse-wtlus.ts. See that script's header for the yearly procedure.",
+  "dataYear": 2023,
+  "retrievedAt": "2026-07-18",
+  "sourceFiles": [
+    "107-16-BIWS-Financial-Statements-Valuation.xlsx",
+    "2023 Deck Barges deck23.xlsx",
+    "2023 Dry Covered Barge drycv23.xlsx",
+    "2023 Dry Open Barge dryop23.xlsx",
+    "2023 Other Dry Barges otdbrg23.xlsx",
+    "2023 Tank Barges tankb23.xlsx",
+    "2023 Toe Boats towb23.xlsx",
+    "2023 TS OP TS23OP.xlsx",
+    "2023 TS VS TS23VS.xlsx",
+    "CC_model.xlsx",
+    "Final Deliverable Diligence Databook - Schuyler Companies 9.11 - Masked Customer Names.XLSX",
+    "Free export from Comparables_ai 2625.xlsx",
+    "Index - Emerge Dynamics.xlsx",
+    "Original-Apartment-Acquisition-Model-v2.4-twkj54.xlsx",
+    "Schuyler Maritime PL by Year 2019 - 2025(1).XLSX",
+    "Single-Family-Residental-Investment-Model-v3.4-efevqr.xlsx",
+    "Stocks.xlsx",
+    "Top Rated Stocks 2023-07-10.xlsx",
+    "Tower Residences (Condos Proforma)(1).xlsx",
+    "Tower Residences (Renovation Budget)(3)(1)(2)(3)(1)(2)(1)(2).xlsx",
+    "Tower Residences (Units and Prices) copy(1).xlsx",
+    "TR - Monthly Apt Proforma(21 mos.)(1).xlsx",
+    "TR - Proforma Apt Rents(2).xlsx"
+  ],
   "howToUpdate": [
-    "1. Open sourceUrl in a normal web browser (automated tools get a 403).",
-    "2. In WTLUS Volume 1 (National Summaries), find the national vessel totals by type.",
-    "3. Enter the dry-cargo hopper barge total (open + covered) in counts.hopperBarge, the deck barge total in counts.deckBarge, tank barges in counts.tankBarge, and towboats/tugboats in counts.towboatTugboat.",
-    "4. WTLUS also tabulates towboats by horsepower class and barges by dimensions: fill towboatHpClasses and deckBargeSizeRanges as arrays of {label, count} buckets, matching however the tables bucket them (leave null if you skip them).",
-    "5. Set dataYear to the WTLUS calendar year and retrievedAt to today's date (YYYY-MM-DD).",
-    "6. Commit and push. Vercel redeploys, and the affected tabs (Hopper Barges, Deck Barges, Towboats, Tugboats) switch their gated charts to this data automatically.",
-    "Leave any value as null until you have the real figure — the app shows an 'awaiting WTLUS' notice for null values instead of inventing numbers."
+    "Download the newest year's per-type Excel files from sourceUrl in a normal browser,",
+    "then run: npx tsx scripts/parse-wtlus.ts --dir \"<downloads folder>\" --year <year>",
+    "and commit the regenerated data/wcsc-fleet.json."
   ],
   "counts": {
-    "dryCargoBarge": null,
-    "hopperBarge": null,
-    "deckBarge": null,
-    "tankBarge": null,
-    "towboatTugboat": null
+    "dryCargoBarge": 29421,
+    "hopperBarge": 21160,
+    "deckBarge": 7856,
+    "otherDryBarge": 405,
+    "tankBarge": 5812,
+    "towboatTugboat": 6491
   },
-  "deckBargeSizeRanges": null,
-  "towboatHpClasses": null
+  "deckBargeSizeRanges": [
+    {
+      "label": "< 100 ft",
+      "count": 372
+    },
+    {
+      "label": "100-149 ft",
+      "count": 1758
+    },
+    {
+      "label": "150-199 ft",
+      "count": 2230
+    },
+    {
+      "label": "200-249 ft",
+      "count": 3174
+    },
+    {
+      "label": "250+ ft",
+      "count": 322
+    }
+  ],
+  "towboatHpClasses": [
+    {
+      "label": "< 800 hp",
+      "count": 1191
+    },
+    {
+      "label": "800-1,199 hp",
+      "count": 1007
+    },
+    {
+      "label": "1,200-1,999 hp",
+      "count": 1207
+    },
+    {
+      "label": "2,000-3,199 hp",
+      "count": 1106
+    },
+    {
+      "label": "3,200-4,999 hp",
+      "count": 663
+    },
+    {
+      "label": "5,000+ hp",
+      "count": 627
+    }
+  ],
+  "towboatHpUnknown": 690,
+  "topOperators": {
+    "deckBarge": [
+      {
+        "name": "MCDONOUGH MARINE SERVICE (DIV. OF MARMAC CORPORATION)",
+        "count": 524
+      },
+      {
+        "name": "INGRAM BARGE CO.",
+        "count": 433
+      },
+      {
+        "name": "CERES CONSULTING, LLC",
+        "count": 281
+      },
+      {
+        "name": "BTMU CAPITAL LEASING & FINANCE ,INC.",
+        "count": 280
+      },
+      {
+        "name": "BKM MARINE, LLC",
+        "count": 245
+      },
+      {
+        "name": "ARTCO",
+        "count": 227
+      },
+      {
+        "name": "AMERICAN COMMERCIAL BARGE LINE LLC",
+        "count": 136
+      },
+      {
+        "name": "LUHR BROS., INC.",
+        "count": 121
+      },
+      {
+        "name": "PINE BLUFF SAND & GRAVEL CO.",
+        "count": 109
+      },
+      {
+        "name": "WEEKS MARINE, INC.",
+        "count": 100
+      },
+      {
+        "name": "PARKER TOWING CO., INC.",
+        "count": 98
+      },
+      {
+        "name": "DAULTON, GLENN E., INC.",
+        "count": 96
+      },
+      {
+        "name": "CANAL BARGE COMPANY, INC.",
+        "count": 87
+      },
+      {
+        "name": "BANC OF AMERICA LEASING & CAPITAL, LLC",
+        "count": 84
+      },
+      {
+        "name": "PINE BLUFF MATERIALS CO. LLC",
+        "count": 82
+      }
+    ],
+    "hopperBarge": [
+      {
+        "name": "INGRAM BARGE CO.",
+        "count": 4295
+      },
+      {
+        "name": "AMERICAN COMMERCIAL BARGE LINE LLC",
+        "count": 1862
+      },
+      {
+        "name": "CROUNSE CORPORATION",
+        "count": 1365
+      },
+      {
+        "name": "AMERICAN RIVER TRANSPORTATION CO.",
+        "count": 1144
+      },
+      {
+        "name": "MARQUETTE FINANCIAL COMPANIES",
+        "count": 730
+      },
+      {
+        "name": "FLOWERS, J. RUSSELL, INC.",
+        "count": 724
+      },
+      {
+        "name": "CARGO CARRIERS",
+        "count": 641
+      },
+      {
+        "name": "CAMPBELL TRANSPORTATION CO.",
+        "count": 621
+      },
+      {
+        "name": "CAMPBELL TRANSPORTATION INC (AEP/RTD)",
+        "count": 469
+      },
+      {
+        "name": "AMERICAN COMMERCIAL BARGE LINE, LLC",
+        "count": 459
+      },
+      {
+        "name": "ARTCO",
+        "count": 451
+      },
+      {
+        "name": "MUFG AMERICAS LEASING & FINANCE INC",
+        "count": 350
+      },
+      {
+        "name": "MARQUETTE TRANSPORTATION COMPANY RIVER LLC",
+        "count": 344
+      },
+      {
+        "name": "PARKER TOWING CO., INC.",
+        "count": 343
+      },
+      {
+        "name": "BKM MARINE, LLC",
+        "count": 321
+      }
+    ],
+    "tankBarge": [
+      {
+        "name": "KIRBY INLAND MARINE, LP",
+        "count": 1083
+      },
+      {
+        "name": "AMERICAN COMMERCIAL BARGE LINE LLC",
+        "count": 410
+      },
+      {
+        "name": "INGRAM BARGE CO.",
+        "count": 349
+      },
+      {
+        "name": "CANAL BARGE COMPANY, INC.",
+        "count": 328
+      },
+      {
+        "name": "HARDIN STREET MARINE LLC",
+        "count": 313
+      },
+      {
+        "name": "ENTERPRISE MARINE SERVICES, LLC",
+        "count": 165
+      },
+      {
+        "name": "FLORIDA MARINE TRANSPORTERS, LLC",
+        "count": 148
+      },
+      {
+        "name": "HIGMAN BARGE LINES, INC.(NOW OWNED BY KIRBY)",
+        "count": 141
+      },
+      {
+        "name": "FLOWERS, J. RUSSELL, INC.",
+        "count": 139
+      },
+      {
+        "name": "BLESSEY MARINE SERVICES, INC.",
+        "count": 130
+      },
+      {
+        "name": "MAGNOLIA MARINE TRANSPORT COMPANY",
+        "count": 106
+      },
+      {
+        "name": "GENESIS MARINE, LLC",
+        "count": 91
+      },
+      {
+        "name": "LE BEOUF BROTHERS TOWING, LLC",
+        "count": 87
+      },
+      {
+        "name": "SOUTHERN TOWING CO.",
+        "count": 83
+      },
+      {
+        "name": "AMERICAN RIVER TRANSPORTATION CO.",
+        "count": 81
+      }
+    ],
+    "towboatTugboat": [
+      {
+        "name": "KIRBY INLAND MARINE, LP",
+        "count": 269
+      },
+      {
+        "name": "INGRAM BARGE CO.",
+        "count": 143
+      },
+      {
+        "name": "MARQUETTE TRANSPORTATION COMPANY RIVER LLC",
+        "count": 121
+      },
+      {
+        "name": "AMERICAN COMMERCIAL BARGE LINES",
+        "count": 88
+      },
+      {
+        "name": "BLESSEY MARINE SERVICES, INC.",
+        "count": 78
+      },
+      {
+        "name": "CROSBY MARINE TRANSPORTATION, LLC",
+        "count": 74
+      },
+      {
+        "name": "FLORIDA MARINE TRANSPORTERS, LLC",
+        "count": 73
+      },
+      {
+        "name": "HIGMAN BARGE LINES, INC.(NOW OWNED BY KIRBY)",
+        "count": 70
+      },
+      {
+        "name": "ENTERPRISE MARINE SERVICES, LLC",
+        "count": 68
+      },
+      {
+        "name": "VANE LINE BUNKERING, INC.",
+        "count": 54
+      },
+      {
+        "name": "AMERICAN RIVER TRANSPORTATION CO.",
+        "count": 47
+      },
+      {
+        "name": "GENESIS MARINE, LLC",
+        "count": 46
+      },
+      {
+        "name": "LE BEOUF BROTHERS TOWING, LLC",
+        "count": 46
+      },
+      {
+        "name": "GREAT LAKES TOWING CO., THE",
+        "count": 39
+      },
+      {
+        "name": "CROUNSE CORPORATION",
+        "count": 37
+      }
+    ]
+  }
 }

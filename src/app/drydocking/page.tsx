@@ -17,9 +17,11 @@ import {
   sizeClasses,
 } from "@/lib/analytics";
 import { computeAgeBuckets, computeCoiBuckets, computeCoiTimeline, getFleetData } from "@/lib/fleetData";
+import { getWcscFleet } from "@/lib/wcscData";
 
 export default function DrydockingPage() {
   const data = getFleetData();
+  const wcsc = getWcscFleet();
 
   if (!data) {
     return (
@@ -94,6 +96,19 @@ export default function DrydockingPage() {
         >
           <HBar data={operatorPrefixes} color={VESSEL_TYPE_COLOR.tank_barge} unit="barges due" />
         </ChartCard>
+
+        {wcsc?.topOperators?.tankBarge && (
+          <ChartCard
+            title={`Top tank barge operators (WTLUS${wcsc.dataYear ? ` ${wcsc.dataYear}` : ""})`}
+            source="USACE WCSC operator of record — authoritative annual survey. Pair with the name-prefix chart above to see whose COIs are coming due."
+          >
+            <HBar
+              data={wcsc.topOperators.tankBarge.map((o) => ({ label: o.name, value: o.count }))}
+              color={VESSEL_TYPE_COLOR.tank_barge}
+              unit="barges"
+            />
+          </ChartCard>
+        )}
 
         <ChartCard title="In-service tank barge age distribution" source="USCG PSIX build years.">
           <AgeHistogram data={computeAgeBuckets(tankBarges, currentYear)} color={VESSEL_TYPE_COLOR.tank_barge} />

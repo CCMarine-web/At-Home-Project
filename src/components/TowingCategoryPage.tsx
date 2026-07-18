@@ -110,10 +110,25 @@ export default function TowingCategoryPage({
           />
         </ChartCard>
 
+        {wcsc?.topOperators?.towboatTugboat && (
+          <ChartCard
+            title={`Top towing vessel operators (WTLUS${wcsc?.dataYear ? ` ${wcsc.dataYear}` : ""})`}
+            source="USACE WCSC operator of record for the whole US towing fleet (towboats + tugboats combined — WCSC does not split them)."
+          >
+            <HBar
+              data={wcsc.topOperators.towboatTugboat.map((o) => ({ label: o.name, value: o.count }))}
+              color={VESSEL_TYPE_COLOR[type]}
+              unit="vessels"
+            />
+          </ChartCard>
+        )}
+
         {hpClasses && hpClasses.length > 0 ? (
           <ChartCard
-            title={`Towing fleet by horsepower class (WTLUS${wcsc?.dataYear ? ` ${wcsc.dataYear}` : ""})`}
-            source={wcsc?.source}
+            title={`US towing fleet by horsepower class (WTLUS${wcsc?.dataYear ? ` ${wcsc.dataYear}` : ""})`}
+            source={`USACE WCSC per-vessel horsepower, whole US towing fleet${
+              wcsc?.towboatHpUnknown ? ` (${wcsc.towboatHpUnknown.toLocaleString()} vessels with HP not reported excluded)` : ""
+            }.`}
           >
             <HBar
               data={hpClasses.map((r) => ({ label: r.label, value: r.count }))}

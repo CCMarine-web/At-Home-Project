@@ -28,7 +28,9 @@ export default function DashboardPage() {
   const tankBarges = data.vessels.filter((v) => v.type === "tank_barge");
   const coi = computeCoiBuckets(tankBarges, NOW);
   const wcsc = getWcscFleet();
-  const wcscHopper = wcsc?.counts.hopperBarge ?? wcsc?.counts.dryCargoBarge ?? null;
+  // Hopper-specific WTLUS count only — never fall back to dryCargoBarge, which
+  // includes deck barges and would overstate hoppers under a "Hopper" label.
+  const wcscHopper = wcsc?.counts.hopperBarge ?? null;
   // Once the authoritative WTLUS in-service hopper figure is entered, the hopper
   // card shows it instead of the inflated PSIX active-record count, so drop
   // hopper from the benchmark-mismatch warning.

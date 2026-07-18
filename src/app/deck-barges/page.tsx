@@ -117,6 +117,19 @@ export default function DeckBargesPage() {
           </AwaitingData>
         )}
 
+        {wcsc?.topOperators?.deckBarge && (
+          <ChartCard
+            title={`Top deck barge operators (WTLUS${yearSuffix})`}
+            source="USACE WCSC operator of record — authoritative annual survey."
+          >
+            <HBar
+              data={wcsc.topOperators.deckBarge.map((o) => ({ label: o.name, value: o.count }))}
+              color={VESSEL_TYPE_COLOR.hopper_barge}
+              unit="deck barges"
+            />
+          </ChartCard>
+        )}
+
         <ChartCard
           title="Dry-cargo category: new-build deliveries per year (last 25 years)"
           source="USCG PSIX build years for the whole dry-cargo (freight barge) category — deck barges included but not separable."

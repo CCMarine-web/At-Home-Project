@@ -16,22 +16,37 @@ export interface WcscBucket {
   count: number;
 }
 
+export interface WcscOperator {
+  name: string;
+  count: number;
+}
+
 export interface WcscFleet {
   source: string;
   sourceUrl: string;
   retrievalMethod: string;
   dataYear: number | null;
   retrievedAt: string | null;
+  sourceFiles?: string[];
   howToUpdate: string[];
   counts: {
     dryCargoBarge: number | null;
     hopperBarge: number | null;
     deckBarge: number | null;
+    otherDryBarge?: number | null;
     tankBarge: number | null;
     towboatTugboat: number | null;
   };
   deckBargeSizeRanges: WcscBucket[] | null;
   towboatHpClasses: WcscBucket[] | null;
+  towboatHpUnknown?: number;
+  /** Vessel counts per operator of record, from the WCSC operator join. */
+  topOperators?: {
+    deckBarge: WcscOperator[];
+    hopperBarge: WcscOperator[];
+    tankBarge: WcscOperator[];
+    towboatTugboat: WcscOperator[];
+  };
 }
 
 let cached: WcscFleet | null = null;

@@ -31,7 +31,7 @@ function SourceCard({ name, status, children }: SourceCardProps) {
 export default function DataSourcesPage() {
   const data = getFleetData();
   const wcsc = getWcscFleet();
-  const wcscPopulated = (wcsc?.counts.hopperBarge ?? wcsc?.counts.dryCargoBarge) != null;
+  const wcscPopulated = wcsc?.counts.hopperBarge != null;
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
@@ -137,9 +137,9 @@ export default function DataSourcesPage() {
           <p>
             <strong>Status:</strong>{" "}
             {wcscPopulated
-              ? `${(wcsc!.counts.hopperBarge ?? wcsc!.counts.dryCargoBarge)!.toLocaleString()} in-service dry-cargo barges${
+              ? `${wcsc!.counts.hopperBarge!.toLocaleString()} hopper barges, ${(wcsc!.counts.deckBarge ?? 0).toLocaleString()} deck barges, ${(wcsc!.counts.tankBarge ?? 0).toLocaleString()} tank barges, ${(wcsc!.counts.towboatTugboat ?? 0).toLocaleString()} towing vessels${
                   wcsc!.dataYear ? ` (WTLUS ${wcsc!.dataYear})` : ""
-                }, entered manually.`
+                } — parsed from the per-vessel Excel files with scripts/parse-wtlus.ts (categories verified disjoint by vessel ID).`
               : "no WTLUS figure entered yet — the Hopper Barges and Deck Barges tabs fall back to PSIX cross-checks and BTS benchmarks until one is added."}
           </p>
         </SourceCard>
@@ -160,6 +160,21 @@ export default function DataSourcesPage() {
             subscription-gated, not an API, and not wired into the automated pipeline.
           </p>
         </SourceCard>
+      </div>
+
+      <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
+        <h3 className="text-sm font-semibold text-slate-100">Data lineage: one source per metric, never summed</h3>
+        <p className="mt-2 text-sm text-slate-300">
+          PSIX and WTLUS describe overlapping parts of the same real-world fleet, so to prevent
+          double-counting, every metric in this app has exactly one owning source: PSIX owns everything
+          per-vessel and current (in-service tank/towing counts, COI drydock forecasts, ages, dimensions);
+          WTLUS owns the annual survey facts PSIX lacks (hopper and deck barge counts, horsepower classes,
+          operator of record); BTS and trade-press figures are display-only benchmarks. Numbers from
+          different sources appear side by side as labeled cross-checks but are never added together — the
+          only summed metric (drydock events next 12 months) combines disjoint PSIX vessel types from that
+          single source. The WTLUS categories themselves were verified disjoint by vessel ID (no hull
+          appears in two category files), and WTLUS hopper counts exclude deck barges.
+        </p>
       </div>
 
       <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
