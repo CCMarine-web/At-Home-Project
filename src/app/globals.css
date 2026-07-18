@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* C&C Marine and Repair brand palette (from the company logo) */
+  --brand-navy: #0a1f5b;
+  --brand-red: #fe0101;
+}
+
+::selection {
+  background: var(--brand-navy);
+  color: #ffffff;
 }
 
 @theme inline {

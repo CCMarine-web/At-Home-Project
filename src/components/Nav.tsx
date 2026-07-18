@@ -18,8 +18,8 @@ export default function Nav() {
               href={item.href}
               className={`whitespace-nowrap border-b-2 px-3 py-3 text-sm font-medium transition-colors ${
                 active
-                  ? "border-slate-900 text-slate-900"
-                  : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700"
+                  ? "border-[#fe0101] text-[#0a1f5b]"
+                  : "border-transparent text-slate-500 hover:border-slate-300 hover:text-[#0a1f5b]"
               }`}
             >
               {item.label}

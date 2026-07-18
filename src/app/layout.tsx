@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "US Inland & Coastal Fleet Dashboard",
+  title: "Fleet Analytics — C&C Marine and Repair",
   description:
     "Fleet composition, drydocking, and market insights for the US inland/coastal commercial marine fleet.",
 };
