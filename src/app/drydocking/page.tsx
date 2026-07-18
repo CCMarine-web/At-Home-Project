@@ -14,8 +14,8 @@ export default function DrydockingPage() {
   if (!data) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-semibold text-slate-900">Drydocking</h2>
-        <p className="mt-4 text-sm text-slate-600">No fleet data has been pulled yet.</p>
+        <h2 className="text-2xl font-semibold text-slate-100">Drydocking</h2>
+        <p className="mt-4 text-sm text-slate-300">No fleet data has been pulled yet.</p>
       </div>
     );
   }
@@ -27,10 +27,10 @@ export default function DrydockingPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-2xl font-semibold text-slate-900">Drydocking</h2>
+        <h2 className="text-2xl font-semibold text-slate-100">Drydocking</h2>
         <LastUpdated generatedAt={data.generatedAt} />
       </div>
-      <p className="max-w-3xl text-sm text-slate-600">
+      <p className="max-w-3xl text-sm text-slate-300">
         Tank barge Certificate of Inspection (COI) expirations, based on the most recently issued COI or
         amendment on file in USCG PSIX for each active tank barge.
       </p>
@@ -43,13 +43,13 @@ export default function DrydockingPage() {
         <StatCard label="No COI on record" value={coi.noRecord.toLocaleString()} />
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
-        <h3 className="text-sm font-semibold text-slate-900">Upcoming COI expirations by month (next 24 months)</h3>
+      <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
+        <h3 className="text-sm font-semibold text-slate-100">Upcoming COI expirations by month (next 24 months)</h3>
         <CoiTimelineChart data={timeline} />
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
-        <h3 className="mb-3 text-sm font-semibold text-slate-900">All tank barges</h3>
+      <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
+        <h3 className="mb-3 text-sm font-semibold text-slate-100">All tank barges</h3>
         <VesselTable vessels={tankBarges} now={NOW_ISO} />
       </div>
     </div>

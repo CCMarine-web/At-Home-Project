@@ -8,7 +8,7 @@ export default function Nav() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-b border-slate-200 bg-white">
+    <nav className="border-b border-slate-800 bg-slate-900">
       <div className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-4 sm:px-6 lg:px-8">
         {NAV_ITEMS.map((item) => {
           const active = pathname?.startsWith(item.href);
@@ -18,8 +18,8 @@ export default function Nav() {
               href={item.href}
               className={`whitespace-nowrap border-b-2 px-3 py-3 text-sm font-medium transition-colors ${
                 active
-                  ? "border-[#fe0101] text-[#0a1f5b]"
-                  : "border-transparent text-slate-500 hover:border-slate-300 hover:text-[#0a1f5b]"
+                  ? "border-[#fe0101] text-white"
+                  : "border-transparent text-slate-400 hover:border-slate-600 hover:text-white"
               }`}
             >
               {item.label}

@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark theme (site is always dark) */
+  --background: #020617; /* slate-950 */
+  --foreground: #e2e8f0; /* slate-200 */
   /* C&C Marine and Repair brand palette (from the company logo) */
   --brand-navy: #0a1f5b;
   --brand-red: #fe0101;
+  color-scheme: dark;
 }
 
 ::selection {
-  background: var(--brand-navy);
+  background: var(--brand-red);
   color: #ffffff;
 }
 
@@ -18,13 +20,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

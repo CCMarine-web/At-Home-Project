@@ -6,7 +6,7 @@ import type { AgeBucket } from "@/lib/fleetData";
 
 export default function AgeHistogram({ data, color }: { data: AgeBucket[]; color: string }) {
   if (data.length === 0) {
-    return <p className="text-sm text-slate-500">No build-year data available.</p>;
+    return <p className="text-sm text-slate-400">No build-year data available.</p>;
   }
 
   return (
@@ -27,8 +27,15 @@ export default function AgeHistogram({ data, color }: { data: AgeBucket[]; color
           width={40}
         />
         <Tooltip
-          cursor={{ fill: "rgba(0,0,0,0.04)" }}
-          contentStyle={{ fontSize: 12, borderRadius: 6, border: `1px solid ${CHART_INK.grid}` }}
+          cursor={{ fill: "rgba(148,163,184,0.12)" }}
+          contentStyle={{
+            fontSize: 12,
+            borderRadius: 6,
+            backgroundColor: CHART_INK.surface,
+            border: `1px solid ${CHART_INK.grid}`,
+            color: CHART_INK.primary,
+          }}
+          labelStyle={{ color: CHART_INK.secondary }}
           formatter={(value) => [`${value} vessels`, "Built"]}
           labelFormatter={(label) => `Built ${label}`}
         />

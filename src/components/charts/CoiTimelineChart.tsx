@@ -23,8 +23,15 @@ export default function CoiTimelineChart({ data }: { data: CoiTimelinePoint[] })
           width={40}
         />
         <Tooltip
-          cursor={{ fill: "rgba(0,0,0,0.04)" }}
-          contentStyle={{ fontSize: 12, borderRadius: 6, border: `1px solid ${CHART_INK.grid}` }}
+          cursor={{ fill: "rgba(148,163,184,0.12)" }}
+          contentStyle={{
+            fontSize: 12,
+            borderRadius: 6,
+            backgroundColor: CHART_INK.surface,
+            border: `1px solid ${CHART_INK.grid}`,
+            color: CHART_INK.primary,
+          }}
+          labelStyle={{ color: CHART_INK.secondary }}
           formatter={(value) => [`${value} COIs`, "Expiring"]}
         />
         <Bar dataKey="count" fill={VESSEL_TYPE_COLOR.tank_barge} radius={[4, 4, 0, 0]} maxBarSize={20} />

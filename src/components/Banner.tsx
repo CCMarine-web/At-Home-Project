@@ -13,9 +13,9 @@ const ICON: Record<BannerProps["status"], string> = {
 };
 
 const BG: Record<BannerProps["status"], string> = {
-  warning: "#fff7e6",
-  critical: "#fdecec",
-  good: "#eaf7ea",
+  warning: "#33280b",
+  critical: "#341515",
+  good: "#0f2e1a",
 };
 
 export default function Banner({ status, title, children }: BannerProps) {
@@ -33,8 +33,8 @@ export default function Banner({ status, title, children }: BannerProps) {
           {ICON[status]}
         </span>
         <div>
-          <p className="text-sm font-semibold text-slate-900">{title}</p>
-          <div className="mt-1 text-sm text-slate-700">{children}</div>
+          <p className="text-sm font-semibold text-slate-100">{title}</p>
+          <div className="mt-1 text-sm text-slate-200">{children}</div>
         </div>
       </div>
     </div>

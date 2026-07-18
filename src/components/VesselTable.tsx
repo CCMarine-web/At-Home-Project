@@ -59,7 +59,7 @@ export default function VesselTable({ vessels, now }: { vessels: Vessel[]; now: 
 
   const headerCell = (key: SortKey, label: string) => (
     <th
-      className="cursor-pointer select-none px-3 py-2 text-left font-medium text-slate-600 hover:text-slate-900"
+      className="cursor-pointer select-none px-3 py-2 text-left font-medium text-slate-300 hover:text-slate-100"
       onClick={() => toggleSort(key)}
     >
       {label}
@@ -75,51 +75,51 @@ export default function VesselTable({ vessels, now }: { vessels: Vessel[]; now: 
           placeholder="Search by vessel name or ID..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
+          className="rounded-md border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-slate-100 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
+          className="rounded-md border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-slate-100 focus:border-slate-400 focus:outline-none"
         >
           <option value="all">All statuses</option>
           <option value="expired">Expired</option>
           <option value="upcoming">Upcoming expiration</option>
           <option value="no_record">No COI on record</option>
         </select>
-        <span className="text-xs text-slate-500">{sorted.length.toLocaleString()} vessels</span>
+        <span className="text-xs text-slate-400">{sorted.length.toLocaleString()} vessels</span>
       </div>
 
-      <div className="max-h-[600px] overflow-auto rounded-lg border border-slate-200">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="sticky top-0 bg-slate-50">
+      <div className="max-h-[600px] overflow-auto rounded-lg border border-slate-800">
+        <table className="min-w-full divide-y divide-slate-800 text-sm">
+          <thead className="sticky top-0 bg-slate-800">
             <tr>
               {headerCell("name", "Vessel Name")}
-              <th className="px-3 py-2 text-left font-medium text-slate-600">ID</th>
+              <th className="px-3 py-2 text-left font-medium text-slate-300">ID</th>
               {headerCell("buildYear", "Build Year")}
-              <th className="px-3 py-2 text-left font-medium text-slate-600">COI Issued</th>
+              <th className="px-3 py-2 text-left font-medium text-slate-300">COI Issued</th>
               {headerCell("coiExpirationDate", "COI Expires")}
-              <th className="px-3 py-2 text-left font-medium text-slate-600">Status</th>
+              <th className="px-3 py-2 text-left font-medium text-slate-300">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 bg-white">
+          <tbody className="divide-y divide-slate-800 bg-slate-900">
             {sorted.slice(0, 500).map((v) => {
               const status = coiStatus(v, nowDate);
               return (
                 <tr key={v.id}>
-                  <td className="px-3 py-1.5 text-slate-900">{v.name}</td>
-                  <td className="px-3 py-1.5 text-slate-500">{v.id}</td>
-                  <td className="px-3 py-1.5 tabular-nums text-slate-700">{v.buildYear ?? "—"}</td>
-                  <td className="px-3 py-1.5 text-slate-700">{v.coiIssueDate ?? "—"}</td>
-                  <td className="px-3 py-1.5 text-slate-700">{v.coiExpirationDate ?? "—"}</td>
+                  <td className="px-3 py-1.5 text-slate-100">{v.name}</td>
+                  <td className="px-3 py-1.5 text-slate-400">{v.id}</td>
+                  <td className="px-3 py-1.5 tabular-nums text-slate-300">{v.buildYear ?? "—"}</td>
+                  <td className="px-3 py-1.5 text-slate-300">{v.coiIssueDate ?? "—"}</td>
+                  <td className="px-3 py-1.5 text-slate-300">{v.coiExpirationDate ?? "—"}</td>
                   <td className="px-3 py-1.5">
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                         status === "expired"
-                          ? "bg-red-100 text-red-700"
+                          ? "bg-red-500/15 text-red-300"
                           : status === "no_record"
-                          ? "bg-slate-100 text-slate-600"
-                          : "bg-emerald-100 text-emerald-700"
+                          ? "bg-slate-800 text-slate-300"
+                          : "bg-emerald-500/15 text-emerald-300"
                       }`}
                     >
                       {status === "expired" ? "Expired" : status === "no_record" ? "No record" : "Upcoming"}
@@ -131,7 +131,7 @@ export default function VesselTable({ vessels, now }: { vessels: Vessel[]; now: 
           </tbody>
         </table>
         {sorted.length > 500 && (
-          <p className="border-t border-slate-200 px-3 py-2 text-xs text-slate-500">
+          <p className="border-t border-slate-800 px-3 py-2 text-xs text-slate-400">
             Showing the first 500 of {sorted.length.toLocaleString()} matching vessels. Narrow your search or filter to see others.
           </p>
         )}

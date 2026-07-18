@@ -14,8 +14,8 @@ export default function HopperBargesPage() {
   if (!data) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-semibold text-slate-900">Hopper Barges</h2>
-        <p className="mt-4 text-sm text-slate-600">No fleet data has been pulled yet.</p>
+        <h2 className="text-2xl font-semibold text-slate-100">Hopper Barges</h2>
+        <p className="mt-4 text-sm text-slate-300">No fleet data has been pulled yet.</p>
       </div>
     );
   }
@@ -28,7 +28,7 @@ export default function HopperBargesPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-2xl font-semibold text-slate-900">Hopper Barges</h2>
+        <h2 className="text-2xl font-semibold text-slate-100">Hopper Barges</h2>
         <LastUpdated generatedAt={data.generatedAt} />
       </div>
 
@@ -46,7 +46,7 @@ export default function HopperBargesPage() {
           <p>{data.methodology.hopperBarges}</p>
           <p className="mt-1">
             The real in-service count comes from USACE WTLUS (~18,000) and must be entered manually into{" "}
-            <code className="rounded bg-slate-100 px-1 py-0.5 text-xs">data/wcsc-fleet.json</code> — see the
+            <code className="rounded bg-slate-800 px-1 py-0.5 text-xs">data/wcsc-fleet.json</code> — see the
             Data Sources tab. Until then, the number below is PSIX&apos;s entire dry-cargo-barge category and
             overstates the in-service hopper fleet roughly threefold.
           </p>
@@ -73,8 +73,8 @@ export default function HopperBargesPage() {
         />
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
-        <h3 className="text-sm font-semibold text-slate-900">Age distribution (PSIX records)</h3>
+      <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
+        <h3 className="text-sm font-semibold text-slate-100">Age distribution (PSIX records)</h3>
         <AgeHistogram data={computeAgeBuckets(vessels, CURRENT_YEAR)} color={VESSEL_TYPE_COLOR.hopper_barge} />
       </div>
     </div>

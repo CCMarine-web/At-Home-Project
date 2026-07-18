@@ -13,8 +13,8 @@ export default function MarketInsightsPage() {
   if (!data) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-semibold text-slate-900">Market Insights</h2>
-        <p className="mt-4 text-sm text-slate-600">No fleet data has been pulled yet.</p>
+        <h2 className="text-2xl font-semibold text-slate-100">Market Insights</h2>
+        <p className="mt-4 text-sm text-slate-300">No fleet data has been pulled yet.</p>
       </div>
     );
   }
@@ -38,29 +38,29 @@ export default function MarketInsightsPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-2xl font-semibold text-slate-900">Market Insights</h2>
+        <h2 className="text-2xl font-semibold text-slate-100">Market Insights</h2>
         <LastUpdated generatedAt={data.generatedAt} />
       </div>
-      <p className="max-w-3xl text-sm text-slate-600">
+      <p className="max-w-3xl text-sm text-slate-300">
         Fleet age and replacement-trend statistics derived from the same PSIX pull as the other tabs. The
         Hopper Barges row carries the same category caveat described on that tab and in Data Sources.
       </p>
 
-      <div className="overflow-auto rounded-lg border border-slate-200 bg-white">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50">
+      <div className="overflow-auto rounded-lg border border-slate-800 bg-slate-900">
+        <table className="min-w-full divide-y divide-slate-800 text-sm">
+          <thead className="bg-slate-800">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-slate-600">Category</th>
-              <th className="px-4 py-2 text-right font-medium text-slate-600">Count</th>
-              <th className="px-4 py-2 text-right font-medium text-slate-600">Avg. age (yrs)</th>
-              <th className="px-4 py-2 text-right font-medium text-slate-600">Built last 5 yrs</th>
-              <th className="px-4 py-2 text-right font-medium text-slate-600">30+ years old</th>
+              <th className="px-4 py-2 text-left font-medium text-slate-300">Category</th>
+              <th className="px-4 py-2 text-right font-medium text-slate-300">Count</th>
+              <th className="px-4 py-2 text-right font-medium text-slate-300">Avg. age (yrs)</th>
+              <th className="px-4 py-2 text-right font-medium text-slate-300">Built last 5 yrs</th>
+              <th className="px-4 py-2 text-right font-medium text-slate-300">30+ years old</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-800">
             {rows.map((r) => (
               <tr key={r.type}>
-                <td className="px-4 py-2 font-medium text-slate-900">
+                <td className="px-4 py-2 font-medium text-slate-100">
                   <span
                     className="mr-2 inline-block h-2.5 w-2.5 rounded-full align-middle"
                     style={{ backgroundColor: VESSEL_TYPE_COLOR[r.type] }}
@@ -81,9 +81,9 @@ export default function MarketInsightsPage() {
         </table>
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4">
-        <h3 className="text-sm font-semibold text-slate-900">Reading the replacement trend</h3>
-        <p className="mt-2 text-sm text-slate-700">
+      <div className="rounded-lg border border-slate-800 bg-slate-900 p-4">
+        <h3 className="text-sm font-semibold text-slate-100">Reading the replacement trend</h3>
+        <p className="mt-2 text-sm text-slate-300">
           A high share of vessels built in the last 5 years alongside a high share of vessels 30+ years old
           points to an actively-replaced fleet with a long working tail — common for barges and towing
           vessels, which have long service lives with periodic recertification rather than fixed retirement
