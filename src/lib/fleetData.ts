@@ -16,6 +16,7 @@ export interface FleetData {
   counts: Record<VesselType, number>;
   benchmarkFlags: BenchmarkFlag[];
   methodology: {
+    tankBarges?: string;
     hopperBarges: string;
     towboatsTugboats: string;
     towingSubtypeBreakdown: Record<string, number>;

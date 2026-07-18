@@ -1,0 +1,21 @@
+{
+  "source": "USACE Waterborne Commerce Statistics Center — Waterborne Transportation Lines of the United States (WTLUS), Volume 1: National Summaries",
+  "sourceUrl": "https://www.iwr.usace.army.mil/About/Technical-Centers/WCSC-Waterborne-Commerce-Statistics-Center/WCSC-Vessel-Characteristics/",
+  "retrievalMethod": "Retrieved MANUALLY once per year. The WCSC portal blocks automated tools (HTTP 403), so this is NOT part of the automated weekly PSIX refresh. Pull it via a normal browser, the W-DAPP tool, or a direct records request to WCSC.",
+  "dataYear": null,
+  "retrievedAt": null,
+  "howToUpdate": [
+    "1. Open sourceUrl in a normal web browser (automated tools get a 403).",
+    "2. In WTLUS Volume 1 (National Summaries), find the national vessel totals by type.",
+    "3. Enter the dry-cargo barge total (open + covered hopper) in counts.dryCargoBarge.",
+    "4. Enter the tank barge total in counts.tankBarge and the towboat/tugboat total in counts.towboatTugboat (optional, for cross-check).",
+    "5. Set dataYear to the WTLUS calendar year and retrievedAt to today's date (YYYY-MM-DD).",
+    "6. Commit and push. Vercel redeploys, and the Hopper Barges tab switches its headline to this in-service figure automatically.",
+    "Leave a count as null until you have the real figure — the app falls back to the PSIX cross-check and shows an 'awaiting WTLUS' notice while it is null."
+  ],
+  "counts": {
+    "dryCargoBarge": null,
+    "tankBarge": null,
+    "towboatTugboat": null
+  }
+}

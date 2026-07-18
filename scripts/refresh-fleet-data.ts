@@ -223,7 +223,7 @@ async function main() {
   await saveCheckpoint(checkpoint);
 
   console.log("\n[4/4] Building final dataset...");
-  const vessels: Vessel[] = classified.map((v) => {
+  const allClassified: Vessel[] = classified.map((v) => {
     const coi = checkpoint.documents[v.vesselId];
     return {
       id: v.vesselId,
@@ -233,10 +233,35 @@ async function main() {
       buildYear: v.buildYear,
       coiIssueDate: coi?.issue ?? null,
       coiExpirationDate: coi?.expiration ?? null,
+      coiStatus: coi?.status ?? null,
       grossTons: null,
       horsepower: null,
     };
   });
+
+  // In-service filtering for tank barges.
+  // A tank barge legally cannot carry cargo without a valid (unexpired)
+  // Certificate of Inspection, so a barge whose latest COI has already expired --
+  // or that has no COI on record at all -- is treated as out of service and
+  // excluded from the count. MISLE's coarse "Active" record-status keeps
+  // scrapped/retired hulls for decades (GAO-20-562), which is why the raw active
+  // count runs ~2x the in-service tank fleet. See docs/data-methodology.md.
+  const hasUnexpiredCoi = (v: Vessel): boolean => {
+    if (!v.coiExpirationDate) return false;
+    const t = new Date(v.coiExpirationDate).getTime();
+    return Number.isFinite(t) && t >= startedAt;
+  };
+
+  const rawTankBarges = allClassified.filter((v) => v.type === "tank_barge").length;
+  const vessels: Vessel[] = allClassified.filter((v) =>
+    v.type === "tank_barge" ? hasUnexpiredCoi(v) : true
+  );
+  const keptTankBarges = vessels.filter((v) => v.type === "tank_barge").length;
+  console.log(
+    `  tank barges: ${keptTankBarges} in service (unexpired COI), dropped ${
+      rawTankBarges - keptTankBarges
+    } with expired or missing COI`
+  );
 
   const counts: Record<VesselType, number> = {
     tank_barge: 0,
@@ -259,6 +284,8 @@ async function main() {
     counts,
     benchmarkFlags,
     methodology: {
+      tankBarges:
+        "Counted only tank barges whose latest Certificate of Inspection is unexpired as of the pull date. A valid COI is legally required to carry cargo, so barges with an expired or missing COI -- retired/scrapped hulls that MISLE still flags 'Active' (GAO-20-562) -- are excluded. This drops the raw active count (~8,000) to the in-service fleet (~4,400), in line with industry figures.",
       hopperBarges:
         "PSIX has no field that isolates hopper barges from other dry-cargo barges (a representative sample of the 'Freight Barge' category came back ~98% generic 'General'). Per an explicit decision, this count is PSIX's ENTIRE active Freight Barge category (hopper, deck, container, and other dry-cargo barges combined), not a verified hopper-barge-only figure.",
       towboatsTugboats:

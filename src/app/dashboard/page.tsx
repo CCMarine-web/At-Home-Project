@@ -4,6 +4,7 @@ import StatCard from "@/components/StatCard";
 import AgeHistogram from "@/components/charts/AgeHistogram";
 import { VESSEL_TYPE_COLOR, VESSEL_TYPE_LABEL } from "@/lib/colors";
 import { computeAgeBuckets, computeCoiBuckets, getFleetData } from "@/lib/fleetData";
+import { getWcscFleet } from "@/lib/wcscData";
 import type { VesselType } from "@/lib/types";
 
 const CURRENT_YEAR = 2026;
@@ -26,7 +27,14 @@ export default function DashboardPage() {
 
   const tankBarges = data.vessels.filter((v) => v.type === "tank_barge");
   const coi = computeCoiBuckets(tankBarges, NOW);
-  const farOffFlags = data.benchmarkFlags.filter((f) => f.farOff);
+  const wcsc = getWcscFleet();
+  const wcscHopper = wcsc?.counts.dryCargoBarge ?? null;
+  // Once the authoritative WTLUS in-service hopper figure is entered, the hopper
+  // card shows it instead of the inflated PSIX active-record count, so drop
+  // hopper from the benchmark-mismatch warning.
+  const farOffFlags = data.benchmarkFlags.filter(
+    (f) => f.farOff && !(f.type === "hopper_barge" && wcscHopper != null)
+  );
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
@@ -50,14 +58,18 @@ export default function DashboardPage() {
       )}
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {VESSEL_TYPES.map((type) => (
-          <StatCard
-            key={type}
-            label={VESSEL_TYPE_LABEL[type]}
-            value={data.counts[type].toLocaleString()}
-            accentColor={VESSEL_TYPE_COLOR[type]}
-          />
-        ))}
+        {VESSEL_TYPES.map((type) => {
+          const wcscOverride = type === "hopper_barge" ? wcscHopper : null;
+          return (
+            <StatCard
+              key={type}
+              label={VESSEL_TYPE_LABEL[type]}
+              value={(wcscOverride ?? data.counts[type]).toLocaleString()}
+              accentColor={VESSEL_TYPE_COLOR[type]}
+              sublabel={wcscOverride != null ? "in-service (USACE WCSC)" : undefined}
+            />
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

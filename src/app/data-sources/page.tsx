@@ -1,5 +1,6 @@
 import LastUpdated from "@/components/LastUpdated";
 import { getFleetData } from "@/lib/fleetData";
+import { getWcscFleet } from "@/lib/wcscData";
 
 interface SourceCardProps {
   name: string;
@@ -29,6 +30,8 @@ function SourceCard({ name, status, children }: SourceCardProps) {
 
 export default function DataSourcesPage() {
   const data = getFleetData();
+  const wcsc = getWcscFleet();
+  const wcscPopulated = wcsc?.counts.dryCargoBarge != null;
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
@@ -63,6 +66,10 @@ export default function DataSourcesPage() {
           </p>
         </SourceCard>
 
+        <SourceCard name="Tank Barges — in-service filter" status="used">
+          <p>{data?.methodology.tankBarges ?? "Methodology details are populated after the first data pull."}</p>
+        </SourceCard>
+
         <SourceCard name="Hopper Barges classification" status="used">
           <p>{data?.methodology.hopperBarges ?? "Methodology details are populated after the first data pull."}</p>
         </SourceCard>
@@ -80,15 +87,29 @@ export default function DataSourcesPage() {
           </p>
         </SourceCard>
 
-        <SourceCard name="USACE Waterborne Commerce Statistics Center (WCSC)" status="unavailable">
+        <SourceCard
+          name="USACE Waterborne Commerce Statistics Center (WTLUS)"
+          status={wcscPopulated ? "used" : "cross-check-only"}
+        >
           <p>
-            WCSC&apos;s &quot;Waterborne Transportation Lines of the United States&quot; dataset is the traditional
-            source behind national tank/hopper barge benchmark figures, and per a Google-indexed page
-            description is collected annually with roughly a one-year publication lag. Its current data
-            portal (ndc.ops.usace.army.mil/wcsc/webpub) is a JavaScript application that this app&apos;s
-            automated tools could not read the contents of, and USACE&apos;s static description pages returned
-            HTTP 403 to automated requests during development. Not wired in — would need either browser-automation
-            tooling or a direct records request to USACE to unlock.
+            <strong>What it provides:</strong> the authoritative national in-service vessel counts by type
+            (dry-cargo/hopper barges, tank barges, towing vessels) from &quot;Waterborne Transportation Lines
+            of the United States&quot; (WTLUS), Volume 1. This is the source behind the ~18,000 in-service
+            hopper-barge figure, and is the Hopper Barges tab&apos;s headline number once entered.
+          </p>
+          <p>
+            <strong>Refresh cadence:</strong> annual (calendar-year data, ~1-year publication lag), retrieved
+            manually — the WCSC portal returns HTTP 403 to automated tools, so this is deliberately kept out
+            of the weekly PSIX pipeline. Update steps live in{" "}
+            <code className="rounded bg-slate-100 px-1 py-0.5 text-xs">data/wcsc-fleet.json</code>.
+          </p>
+          <p>
+            <strong>Status:</strong>{" "}
+            {wcscPopulated
+              ? `${wcsc!.counts.dryCargoBarge!.toLocaleString()} in-service dry-cargo barges${
+                  wcsc!.dataYear ? ` (WTLUS ${wcsc!.dataYear})` : ""
+                }, entered manually.`
+              : "no WTLUS figure entered yet — the Hopper Barges tab falls back to the PSIX active-record cross-check until one is added."}
           </p>
         </SourceCard>
 

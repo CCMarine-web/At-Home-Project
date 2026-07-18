@@ -8,6 +8,7 @@ export interface Vessel {
   buildYear: number | null;
   coiIssueDate: string | null;
   coiExpirationDate: string | null;
+  coiStatus: string | null;
   grossTons: number | null;
   horsepower: number | null;
 }
