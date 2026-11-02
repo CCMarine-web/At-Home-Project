@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-26T18:14:56.108Z",
+  "generatedAt": "2026-11-02T21:43:59.059Z",
   "testMode": false,
   "vessels": [
     {
@@ -964,20 +964,6 @@
       "coiExpirationDate": "May 30,2029",
       "coiStatus": "Issued/Effective",
       "lengthFeet": 155,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "24741",
-      "name": "WEB 229",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2001,
-      "coiIssueDate": "October 28,2021",
-      "coiExpirationDate": "October 28,2026",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 297.5,
       "breadthFeet": 54,
       "grossTons": null,
       "horsepower": null
@@ -6233,20 +6219,6 @@
       "horsepower": null
     },
     {
-      "id": "356304",
-      "name": "MM 20",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 1991,
-      "coiIssueDate": "October 28,2021",
-      "coiExpirationDate": "October 28,2026",
-      "coiStatus": "Revoked",
-      "lengthFeet": 297.5,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "357432",
       "name": "BUFFALO 250",
       "type": "tank_barge",
@@ -7111,20 +7083,6 @@
       "coiStatus": "Issued/Effective",
       "lengthFeet": 200,
       "breadthFeet": 35,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "373711",
-      "name": "CHEM 1321",
-      "type": "tank_barge",
-      "serviceSubType": "Liquid Chemical Cargo Barge",
-      "buildYear": 1992,
-      "coiIssueDate": "November 2,2021",
-      "coiExpirationDate": "November 2,2026",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 240,
-      "breadthFeet": 54,
       "grossTons": null,
       "horsepower": null
     },
@@ -11884,20 +11842,6 @@
       "coiExpirationDate": "September 6,2029",
       "coiStatus": "EXPIRED",
       "lengthFeet": 195,
-      "breadthFeet": 35,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "496772",
-      "name": "98-2L",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 1999,
-      "coiIssueDate": "October 29,2021",
-      "coiExpirationDate": "October 29,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 130,
       "breadthFeet": 35,
       "grossTons": null,
       "horsepower": null
@@ -19253,20 +19197,6 @@
       "horsepower": null
     },
     {
-      "id": "799523",
-      "name": "DOUBLE SKIN 33",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2006,
-      "coiIssueDate": "October 27,2021",
-      "coiExpirationDate": "October 27,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 297.5,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "800526",
       "name": "MM 160",
       "type": "tank_barge",
@@ -20905,20 +20835,6 @@
       "horsepower": null
     },
     {
-      "id": "866464",
-      "name": "MPC 624",
-      "type": "tank_barge",
-      "serviceSubType": "Liquid Chemical Cargo Barge",
-      "buildYear": 2007,
-      "coiIssueDate": "October 27,2021",
-      "coiExpirationDate": "October 27,2026",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 297.5,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "866467",
       "name": "MPC 626",
       "type": "tank_barge",
@@ -21880,20 +21796,6 @@
       "coiExpirationDate": "November 8,2027",
       "coiStatus": "Issued/Effective",
       "lengthFeet": 297.5,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "876869",
-      "name": 405,
-      "type": "tank_barge",
-      "serviceSubType": "Oil Cargo Barge",
-      "buildYear": 2007,
-      "coiIssueDate": "October 28,2021",
-      "coiExpirationDate": "October 28,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 263.3,
       "breadthFeet": 54,
       "grossTons": null,
       "horsepower": null
@@ -24349,20 +24251,6 @@
       "horsepower": null
     },
     {
-      "id": "933913",
-      "name": "MPC 635",
-      "type": "tank_barge",
-      "serviceSubType": "Liquid Chemical Cargo Barge",
-      "buildYear": 2008,
-      "coiIssueDate": "November 2,2021",
-      "coiExpirationDate": "November 2,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 297.5,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "933914",
       "name": "MPC 636",
       "type": "tank_barge",
@@ -25378,20 +25266,6 @@
       "buildYear": 2009,
       "coiIssueDate": "February 23,2022",
       "coiExpirationDate": "February 23,2027",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 334,
-      "breadthFeet": 70,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "939172",
-      "name": "TB-602",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2010,
-      "coiIssueDate": "October 27,2021",
-      "coiExpirationDate": "October 27,2026",
       "coiStatus": "EXPIRED",
       "lengthFeet": 334,
       "breadthFeet": 70,
@@ -32687,20 +32561,6 @@
       "coiIssueDate": "November 17,2021",
       "coiExpirationDate": "November 17,2026",
       "coiStatus": "Issued/Effective",
-      "lengthFeet": 200,
-      "breadthFeet": 35,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "1111610",
-      "name": "CBC 1337",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2011,
-      "coiIssueDate": "November 1,2021",
-      "coiExpirationDate": "November 1,2026",
-      "coiStatus": "EXPIRED",
       "lengthFeet": 200,
       "breadthFeet": 35,
       "grossTons": null,
@@ -49451,20 +49311,6 @@
       "horsepower": null
     },
     {
-      "id": "1327605",
-      "name": "DOUBLE SKIN 602",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2016,
-      "coiIssueDate": "November 1,2021",
-      "coiExpirationDate": "November 1,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 344.9,
-      "breadthFeet": 62,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "1327621",
       "name": "CBR 2308",
       "type": "tank_barge",
@@ -50914,20 +50760,6 @@
       "buildYear": 2016,
       "coiIssueDate": "January 20,2026",
       "coiExpirationDate": "January 20,2031",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 297.5,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "1354995",
-      "name": "EMS 397",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2016,
-      "coiIssueDate": "November 1,2021",
-      "coiExpirationDate": "November 1,2026",
       "coiStatus": "Issued/Effective",
       "lengthFeet": 297.5,
       "breadthFeet": 54,
@@ -864406,26 +864238,26 @@
     }
   ],
   "counts": {
-    "tank_barge": 4483,
+    "tank_barge": 4471,
     "hopper_barge": 54993,
     "towboat": 1889,
     "tugboat": 378
   },
   "inServiceCounts": {
-    "tank_barge": 4483,
+    "tank_barge": 4471,
     "hopper_barge": null,
-    "towboat": 1638,
-    "tugboat": 327
+    "towboat": 1636,
+    "tugboat": 326
   },
   "towingFleet": {
     "activeRecords": 6779,
     "withCoiRecord": 4941,
-    "coiInForce": 4609
+    "coiInForce": 4598
   },
   "tankSubtypeBreakdown": {
-    "General 2": 2496,
-    "Oil Cargo Barge": 345,
-    "Liquid Chemical Cargo Barge": 1462,
+    "General 2": 2488,
+    "Oil Cargo Barge": 344,
+    "Liquid Chemical Cargo Barge": 1459,
     "Non-Flammable Liquid Cargo Barge": 73,
     "Bulk Liquid": 27,
     "General": 64,
@@ -864435,7 +864267,7 @@
   "benchmarkFlags": [
     {
       "type": "tank_barge",
-      "actual": 4483,
+      "actual": 4471,
       "benchmark": 4000,
       "farOff": false
     },
