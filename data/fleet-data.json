@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T21:55:55.709Z",
+  "generatedAt": "2026-11-23T23:37:47.336Z",
   "testMode": false,
   "vessels": [
     {
@@ -1693,20 +1693,6 @@
       "coiStatus": "Issued/Effective",
       "lengthFeet": 297.5,
       "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "38541",
-      "name": 301,
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2002,
-      "coiIssueDate": "November 23,2021",
-      "coiExpirationDate": "November 23,2026",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 250,
-      "breadthFeet": 50,
       "grossTons": null,
       "horsepower": null
     },
@@ -3471,20 +3457,6 @@
       "coiStatus": "EXPIRED",
       "lengthFeet": 297.6,
       "breadthFeet": 54.1,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "47805",
-      "name": "USL 128",
-      "type": "tank_barge",
-      "serviceSubType": "General",
-      "buildYear": 1973,
-      "coiIssueDate": "November 23,2021",
-      "coiExpirationDate": "November 23,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 184,
-      "breadthFeet": 52.5,
       "grossTons": null,
       "horsepower": null
     },
@@ -10251,20 +10223,6 @@
       "horsepower": null
     },
     {
-      "id": "461555",
-      "name": "CBC 25",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 1997,
-      "coiIssueDate": "November 22,2021",
-      "coiExpirationDate": "November 22,2026",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 195,
-      "breadthFeet": 35,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "461556",
       "name": "CBC 20",
       "type": "tank_barge",
@@ -15060,20 +15018,6 @@
       "buildYear": 2004,
       "coiIssueDate": "July 31,2024",
       "coiExpirationDate": "July 31,2029",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 297.5,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "662279",
-      "name": "MAP 671",
-      "type": "tank_barge",
-      "serviceSubType": "Liquid Chemical Cargo Barge",
-      "buildYear": 2004,
-      "coiIssueDate": "November 19,2021",
-      "coiExpirationDate": "November 19,2026",
       "coiStatus": "Issued/Effective",
       "lengthFeet": 297.5,
       "breadthFeet": 54,
@@ -20345,20 +20289,6 @@
       "horsepower": null
     },
     {
-      "id": "846137",
-      "name": "MMLP 285",
-      "type": "tank_barge",
-      "serviceSubType": "Oil Cargo Barge",
-      "buildYear": 2006,
-      "coiIssueDate": "November 23,2021",
-      "coiExpirationDate": "November 23,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 170,
-      "breadthFeet": 42,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "847732",
       "name": "NALE",
       "type": "tank_barge",
@@ -23530,20 +23460,6 @@
       "buildYear": 2007,
       "coiIssueDate": "October 5,2022",
       "coiExpirationDate": "October 5,2027",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 297.5,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "922735",
-      "name": "EMS 366B",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2007,
-      "coiIssueDate": "November 23,2021",
-      "coiExpirationDate": "November 23,2026",
       "coiStatus": "Issued/Effective",
       "lengthFeet": 297.5,
       "breadthFeet": 54,
@@ -32735,20 +32651,6 @@
       "horsepower": null
     },
     {
-      "id": "1111609",
-      "name": "CBC 1336",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2011,
-      "coiIssueDate": "November 17,2021",
-      "coiExpirationDate": "November 17,2026",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 200,
-      "breadthFeet": 35,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "1111610",
       "name": "CBC 1337",
       "type": "tank_barge",
@@ -32756,20 +32658,6 @@
       "buildYear": 2011,
       "coiIssueDate": "November 1,2026",
       "coiExpirationDate": "November 1,2031",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 200,
-      "breadthFeet": 35,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "1111611",
-      "name": "CBC 1338",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2011,
-      "coiIssueDate": "November 23,2021",
-      "coiExpirationDate": "November 23,2026",
       "coiStatus": "Issued/Effective",
       "lengthFeet": 200,
       "breadthFeet": 35,
@@ -33514,20 +33402,6 @@
       "coiExpirationDate": "May 16,2027",
       "coiStatus": "EXPIRED",
       "lengthFeet": 222,
-      "breadthFeet": 54,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "1117700",
-      "name": "KIRBY 27768",
-      "type": "tank_barge",
-      "serviceSubType": "Liquid Chemical Cargo Barge",
-      "buildYear": 2011,
-      "coiIssueDate": "November 22,2021",
-      "coiExpirationDate": "November 22,2026",
-      "coiStatus": "Issued/Effective",
-      "lengthFeet": 300,
       "breadthFeet": 54,
       "grossTons": null,
       "horsepower": null
@@ -50137,20 +50011,6 @@
       "horsepower": null
     },
     {
-      "id": "1331868",
-      "name": "KIRBY 155-01",
-      "type": "tank_barge",
-      "serviceSubType": "General 2",
-      "buildYear": 2016,
-      "coiIssueDate": "November 17,2021",
-      "coiExpirationDate": "November 17,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 491.8,
-      "breadthFeet": 72,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
       "id": "1331870",
       "name": "KIRBY 155-02",
       "type": "tank_barge",
@@ -52301,20 +52161,6 @@
       "coiIssueDate": "September 17,2026",
       "coiExpirationDate": "September 17,2031",
       "coiStatus": "Issued/Effective",
-      "lengthFeet": 200,
-      "breadthFeet": 35,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "1396951",
-      "name": "IB1602",
-      "type": "tank_barge",
-      "serviceSubType": "Liquid Chemical Cargo Barge",
-      "buildYear": 2016,
-      "coiIssueDate": "November 23,2021",
-      "coiExpirationDate": "November 23,2026",
-      "coiStatus": "EXPIRED",
       "lengthFeet": 200,
       "breadthFeet": 35,
       "grossTons": null,
@@ -60339,20 +60185,6 @@
       "coiStatus": "EXPIRED",
       "lengthFeet": 245,
       "breadthFeet": 48,
-      "grossTons": null,
-      "horsepower": null
-    },
-    {
-      "id": "1683138",
-      "name": "CENAC 103",
-      "type": "tank_barge",
-      "serviceSubType": "Liquid Chemical Cargo Barge",
-      "buildYear": 2021,
-      "coiIssueDate": "November 23,2021",
-      "coiExpirationDate": "November 23,2026",
-      "coiStatus": "EXPIRED",
-      "lengthFeet": 195,
-      "breadthFeet": 46,
       "grossTons": null,
       "horsepower": null
     },
@@ -865218,36 +865050,36 @@
     }
   ],
   "counts": {
-    "tank_barge": 4490,
+    "tank_barge": 4478,
     "hopper_barge": 55029,
     "towboat": 1897,
     "tugboat": 385
   },
   "inServiceCounts": {
-    "tank_barge": 4490,
+    "tank_barge": 4478,
     "hopper_barge": null,
-    "towboat": 1645,
-    "tugboat": 331
+    "towboat": 1643,
+    "tugboat": 330
   },
   "towingFleet": {
     "activeRecords": 6822,
     "withCoiRecord": 4952,
-    "coiInForce": 4616
+    "coiInForce": 4602
   },
   "tankSubtypeBreakdown": {
-    "General 2": 2495,
-    "Oil Cargo Barge": 349,
-    "Liquid Chemical Cargo Barge": 1465,
+    "General 2": 2489,
+    "Oil Cargo Barge": 348,
+    "Liquid Chemical Cargo Barge": 1461,
     "Non-Flammable Liquid Cargo Barge": 74,
     "Bulk Liquid": 27,
-    "General": 64,
+    "General": 63,
     "Chlorine Barge": 7,
     "Anhydrous Ammonia Barge": 9
   },
   "benchmarkFlags": [
     {
       "type": "tank_barge",
-      "actual": 4490,
+      "actual": 4478,
       "benchmark": 4000,
       "farOff": false
     },
